@@ -135,7 +135,7 @@ static constexpr bool kDumpRosAllocStatsOnSigQuit = false;
 static const char* kRegionSpaceName = "main space (region space)";
 
 // If true, we log all GCs in the both the foreground and background. Used for debugging.
-static constexpr bool kLogAllGCs = false;
+static constexpr bool kLogAllGCs = true;
 
 // How much we grow the TLAB if we can do it.
 static constexpr size_t kPartialTlabSize = 16 * KB;
@@ -2494,6 +2494,19 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
                                                bool clear_soft_references) {
   Thread* self = Thread::Current();
   Runtime* runtime = Runtime::Current();
+
+  LOG(INFO) << "[HT] [GC] [Start]"
+            // << " ts=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
+            << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
+            << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
+            << ", gc_cause=" << gc_cause
+            << ", heap_obj_allocated=" << GetObjectsAllocated()
+            << ", heap_bytes_allocated=" << GetBytesAllocated()
+            << ", heap_obj_allocated_ever=" << GetObjectsAllocatedEver()
+            << ", heap_obj_freed_ever=" << GetObjectsFreedEver()
+            << ", heap_bytes_allocated_ever=" << GetBytesAllocatedEver()
+            << ", heap_bytes_freed_ever=" << GetBytesFreedEver();
+
   // If the heap can't run the GC, silently fail and return that no GC was run.
   switch (gc_type) {
     case collector::kGcTypePartial: {
@@ -2614,6 +2627,23 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
   GrowForUtilization(collector, bytes_allocated_before_gc);
   LogGC(gc_cause, collector);
   FinishGC(self, gc_type);
+
+  LOG(INFO) << "[HT] [GC] [End]"
+            << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
+            << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
+            << ", gc_cause=" << gc_cause
+            << ", gc_name=" << collector->GetName()
+            << ", heap_obj_allocated=" << GetObjectsAllocated()
+            << ", heap_bytes_allocated=" << GetBytesAllocated()
+            << ", heap_obj_allocated_ever=" << GetObjectsAllocatedEver()
+            << ", heap_obj_freed_ever=" << GetObjectsFreedEver()
+            << ", heap_bytes_allocated_ever=" << GetBytesAllocatedEver()
+            << ", heap_bytes_freed_ever=" << GetBytesFreedEver()
+            << ", gc_obj_freed=" << GetCurrentGcIteration()->GetFreedObjects()
+            << ", gc_bytes_freed=" << GetCurrentGcIteration()->GetFreedBytes()
+            << ", gc_large_obj_freed=" << GetCurrentGcIteration()->GetFreedLargeObjects()
+            << ", gc_large_bytes_freed=" << GetCurrentGcIteration()->GetFreedLargeObjectBytes();
+
   // Inform DDMS that a GC completed.
   Dbg::GcDidFinish();
   // Unload native libraries for class unloading. We do this after calling FinishGC to prevent
@@ -2648,7 +2678,8 @@ void Heap::LogGC(GcCause gc_cause, collector::GarbageCollector* collector) {
       pause_string << PrettyDuration((pause_times[i] / 1000) * 1000)
                    << ((i != pause_times.size() - 1) ? "," : "");
     }
-    LOG(INFO) << gc_cause << " " << collector->GetName()
+    LOG(INFO) << "[HT] [SysGC] "
+              << gc_cause << " " << collector->GetName()
               << " GC freed "  << current_gc_iteration_.GetFreedObjects() << "("
               << PrettySize(current_gc_iteration_.GetFreedBytes()) << ") AllocSpace objects, "
               << current_gc_iteration_.GetFreedLargeObjects() << "("
