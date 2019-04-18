@@ -1395,6 +1395,9 @@ class HLoopInformationOutwardIterator : public ValueObject {
   M(VecMultiplyAccumulate, VecOperation)                                \
   M(VecLoad, VecMemoryOperation)                                        \
   M(VecStore, VecMemoryOperation)                                       \
+  M(TraceNewInstance, Instruction)                                      \
+  M(TraceInstanceFieldGet, Instruction)                                 \
+  M(TraceInstanceFieldSet, Instruction)                                 \
 
 /*
  * Instructions, shared across several (not all) architectures.
@@ -3965,6 +3968,33 @@ class HNewInstance FINAL : public HExpression<1> {
   QuickEntrypointEnum entrypoint_;
 
   DISALLOW_COPY_AND_ASSIGN(HNewInstance);
+};
+
+class HTraceNewInstance : public HTemplateInstruction<0> {
+public:
+  explicit HTraceNewInstance(): HTemplateInstruction(SideEffects::None(), 0u) { }
+  bool NeedsEnvironment() const OVERRIDE { return true; }
+  DECLARE_INSTRUCTION(TraceNewInstance);
+private:
+  DISALLOW_COPY_AND_ASSIGN(HTraceNewInstance);
+};
+
+class HTraceInstanceFieldGet : public HTemplateInstruction<0> {
+public:
+  explicit HTraceInstanceFieldGet(): HTemplateInstruction(SideEffects::None(), 0u) { }
+  bool NeedsEnvironment() const OVERRIDE { return true; }
+  DECLARE_INSTRUCTION(TraceInstanceFieldGet);
+private:
+  DISALLOW_COPY_AND_ASSIGN(HTraceInstanceFieldGet);
+};
+
+class HTraceInstanceFieldSet : public HTemplateInstruction<0> {
+public:
+  explicit HTraceInstanceFieldSet(): HTemplateInstruction(SideEffects::None(), 0u) { }
+  bool NeedsEnvironment() const OVERRIDE { return true; }
+  DECLARE_INSTRUCTION(TraceInstanceFieldSet);
+private:
+  DISALLOW_COPY_AND_ASSIGN(HTraceInstanceFieldSet);
 };
 
 enum IntrinsicNeedsEnvironmentOrCache {

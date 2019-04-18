@@ -4062,6 +4062,18 @@ void InstructionCodeGeneratorX86_64::VisitUShr(HUShr* ushr) {
   HandleShift(ushr);
 }
 
+void LocationsBuilderX86_64::VisitTraceNewInstance(HTraceNewInstance* instruction ATTRIBUTE_UNUSED) { }
+
+void InstructionCodeGeneratorX86_64::VisitTraceNewInstance(HTraceNewInstance* instruction ATTRIBUTE_UNUSED) { }
+
+void LocationsBuilderX86_64::VisitTraceInstanceFieldGet(art::HTraceInstanceFieldGet *instruction ATTRIBUTE_UNUSED) { }
+
+void InstructionCodeGeneratorX86_64::VisitTraceInstanceFieldGet(art::HTraceInstanceFieldGet *instruction ATTRIBUTE_UNUSED) { }
+
+void LocationsBuilderX86_64::VisitTraceInstanceFieldSet(art::HTraceInstanceFieldSet *instruction ATTRIBUTE_UNUSED) { }
+
+void InstructionCodeGeneratorX86_64::VisitTraceInstanceFieldSet(art::HTraceInstanceFieldSet *instruction ATTRIBUTE_UNUSED) { }
+
 void LocationsBuilderX86_64::VisitNewInstance(HNewInstance* instruction) {
   LocationSummary* locations =
       new (GetGraph()->GetArena()) LocationSummary(instruction, LocationSummary::kCallOnMainOnly);

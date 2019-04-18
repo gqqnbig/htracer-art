@@ -5585,6 +5585,18 @@ void InstructionCodeGeneratorMIPS64::VisitNewArray(HNewArray* instruction) {
   DCHECK(!codegen_->IsLeafMethod());
 }
 
+void LocationsBuilderMIPS64::VisitTraceNewInstance(HTraceNewInstance* instruction ATTRIBUTE_UNUSED) { }
+
+void InstructionCodeGeneratorMIPS64::VisitTraceNewInstance(HTraceNewInstance* instruction ATTRIBUTE_UNUSED) { }
+
+void LocationsBuilderMIPS64::VisitTraceInstanceFieldGet(art::HTraceInstanceFieldGet *instruction ATTRIBUTE_UNUSED) { }
+
+void InstructionCodeGeneratorMIPS64::VisitTraceInstanceFieldGet(art::HTraceInstanceFieldGet *instruction ATTRIBUTE_UNUSED) { }
+
+void LocationsBuilderMIPS64::VisitTraceInstanceFieldSet(art::HTraceInstanceFieldSet *instruction ATTRIBUTE_UNUSED) { }
+
+void InstructionCodeGeneratorMIPS64::VisitTraceInstanceFieldSet(art::HTraceInstanceFieldSet *instruction ATTRIBUTE_UNUSED) { }
+
 void LocationsBuilderMIPS64::VisitNewInstance(HNewInstance* instruction) {
   LocationSummary* locations =
       new (GetGraph()->GetArena()) LocationSummary(instruction, LocationSummary::kCallOnMainOnly);
