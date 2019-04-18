@@ -38,6 +38,19 @@
 namespace art {
 namespace interpreter {
 
+ALWAYS_INLINE void LogInstanceFieldAccess(std::string name, const ShadowFrame& sf, ArtField* f, Thread* t)
+REQUIRES_SHARED(Locks::mutator_lock_)
+{
+  LOG(INFO) << "[HT] [" << name << "]"
+            << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
+            << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
+            << ", method=" << sf.GetMethod()->GetName()
+            << ", field=" << f->GetName()
+            << ", iget=" << t->GetIGetPtr()
+            << ", iput=" << t->GetIPutPtr()
+            << ", obj_alloc=" << t->GetObjAllocatedPtr();
+}
+
 void ThrowNullPointerExceptionFromInterpreter() {
   ThrowNullPointerExceptionFromDexPC();
 }
