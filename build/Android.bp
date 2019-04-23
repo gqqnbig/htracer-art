@@ -28,6 +28,10 @@ art_global_defaults {
         "-Wall",
         "-Werror",
         "-Wextra",
+        //编译用的是prebuilts/clang/host/linux-x86/clang-4053586/bin/clang++
+        //clang++对于参数顺序有要求。
+        //gcc对参数顺序无要求
+        "-Wno-unused-parameter",
         "-Wstrict-aliasing",
         "-fstrict-aliasing",
         "-Wunreachable-code",

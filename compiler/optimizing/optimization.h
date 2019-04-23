@@ -31,6 +31,7 @@ class HOptimization : public ArenaObject<kArenaAllocOptimization> {
   HOptimization(HGraph* graph,
                 const char* pass_name,
                 OptimizingCompilerStats* stats = nullptr)
+      //以下是构造函数的初始化列表
       : graph_(graph),
         stats_(stats),
         pass_name_(pass_name) {}
@@ -41,12 +42,13 @@ class HOptimization : public ArenaObject<kArenaAllocOptimization> {
   // <optimization_name> or <optimization_name>$<pass_name> for common <optimization_name> prefix.
   // Example: 'instruction_simplifier', 'instruction_simplifier$after_bce',
   // 'instruction_simplifier$before_codegen'.
-  const char* GetPassName() const { return pass_name_; }
+  const char* GetPassName() const { return this->pass_name_; } //是内联函数
 
   // Perform the analysis itself.
   virtual void Run() = 0;
 
  protected:
+  //结尾的const表示this指针是const指针
   void MaybeRecordStat(MethodCompilationStat compilation_stat, size_t count = 1) const;
 
   HGraph* const graph_;
