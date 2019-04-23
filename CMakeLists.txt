@@ -6,7 +6,7 @@
 
 cmake_minimum_required(VERSION 3.5)
 project(libartd-compiler)
-set(ANDROID_ROOT /home/yuanqi/Developments/8.1.0_r52)
+set(ANDROID_ROOT /home/qiqi/Project/WORKING_DIRECTORY)
 
 set(CMAKE_C_COMPILER "${ANDROID_ROOT}/prebuilts/clang/host/linux-x86/clang-4053586/bin/clang")
 set(CMAKE_CXX_COMPILER "${ANDROID_ROOT}/prebuilts/clang/host/linux-x86/clang-4053586/bin/clang++")
