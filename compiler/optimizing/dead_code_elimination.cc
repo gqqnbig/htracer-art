@@ -357,7 +357,11 @@ void HDeadCodeElimination::RemoveDeadInstructions() {
     for (i.Advance(); !i.Done(); i.Advance()) {
       HInstruction* inst = i.Current();
       DCHECK(!inst->IsControlFlow());
-      if (inst->IsDeadAndRemovable()) {
+      if (inst->IsDeadAndRemovable()
+          && !inst->IsTraceNewInstance()
+          && !inst->IsTraceInstanceFieldGet()
+          && !inst->IsTraceInstanceFieldSet()
+      ) {
         block->RemoveInstruction(inst);
         MaybeRecordStat(MethodCompilationStat::kRemovedDeadInstruction);
       }
