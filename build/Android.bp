@@ -38,6 +38,7 @@ art_global_defaults {
         "-Wredundant-decls",
         "-Wshadow",
         "-Wunused",
+        "-Wno-unused-variable",
         "-fvisibility=protected",
 
         // Warn about thread safety violations with clang.

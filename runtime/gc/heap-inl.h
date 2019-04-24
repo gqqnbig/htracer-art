@@ -78,6 +78,7 @@ inline mirror::Object* Heap::AllocObjectWithAllocator(Thread* self,
   size_t bytes_allocated;
   size_t usable_size;
   size_t new_num_bytes_allocated = 0;
+  size_t bytes_tl_bulk_allocated = 0;
   if (IsTLABAllocator(allocator)) {
     byte_count = RoundUp(byte_count, space::BumpPointerSpace::kAlignment);
   }
@@ -107,7 +108,7 @@ inline mirror::Object* Heap::AllocObjectWithAllocator(Thread* self,
     QuasiAtomic::ThreadFenceForConstructor();
   } else {
     // bytes allocated that takes bulk thread-local buffer allocations into account.
-    size_t bytes_tl_bulk_allocated = 0;
+    // size_t bytes_tl_bulk_allocated = 0;
     obj = TryToAllocate<kInstrumented, false>(self, allocator, byte_count, &bytes_allocated,
                                               &usable_size, &bytes_tl_bulk_allocated);
     if (UNLIKELY(obj == nullptr)) {
@@ -213,6 +214,16 @@ inline mirror::Object* Heap::AllocObjectWithAllocator(Thread* self,
   }
   VerifyObject(obj);
   self->VerifyStack();
+
+  auto current_runtime = Runtime::Current();
+
+  LOG(INFO) << "[HT] [Heap]"
+            << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
+            << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
+            << ", bytes_allocated=" << bytes_allocated
+            << ", bytes_tl_bulk_allocated=" << bytes_tl_bulk_allocated
+            << ", heap_num_bytes_allocated=" << num_bytes_allocated_.LoadSequentiallyConsistent();
+
   return obj.Ptr();
 }
 
