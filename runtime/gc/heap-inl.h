@@ -75,7 +75,7 @@ inline mirror::Object* Heap::AllocObjectWithAllocator(Thread* self,
     // fragmentation.
   }
   // bytes allocated for the (individual) object.
-  size_t bytes_allocated;
+  size_t bytes_allocated=0;
   size_t usable_size;
   size_t new_num_bytes_allocated = 0;
   size_t bytes_tl_bulk_allocated = 0;
@@ -215,7 +215,7 @@ inline mirror::Object* Heap::AllocObjectWithAllocator(Thread* self,
   VerifyObject(obj);
   self->VerifyStack();
 
-  auto current_runtime = Runtime::Current();
+  Runtime* current_runtime = Runtime::Current();
 
   LOG(INFO) << "[HT] [Heap]"
             << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
