@@ -216,13 +216,17 @@ inline mirror::Object* Heap::AllocObjectWithAllocator(Thread* self,
   self->VerifyStack();
 
   Runtime* current_runtime = Runtime::Current();
+  current_runtime->ObjAllocatedIncrement(1);
+  current_runtime->BytesAllocatedIncrement(bytes_allocated);
 
   LOG(INFO) << "[HT] [Heap]"
             << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
             << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
             << ", bytes_allocated=" << bytes_allocated
             << ", bytes_tl_bulk_allocated=" << bytes_tl_bulk_allocated
-            << ", heap_num_bytes_allocated=" << num_bytes_allocated_.LoadSequentiallyConsistent();
+            << ", heap_num_bytes_allocated=" << num_bytes_allocated_.LoadSequentiallyConsistent()
+            << ", art_obj_allocated=" << current_runtime->GetObjAllocated()
+            << ", art_bytes_allocated=" << current_runtime->GetBytesAllocated();
 
   return obj.Ptr();
 }

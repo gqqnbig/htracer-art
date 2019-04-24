@@ -677,6 +677,11 @@ class Runtime {
     return madvise_random_access_;
   }
 
+  uint64_t GetObjAllocated() { return obj_allocated; }
+  uint64_t GetBytesAllocated() { return bytes_allocated; }
+  void ObjAllocatedIncrement(uint64_t value = 1) { obj_allocated += value; }
+  void BytesAllocatedIncrement(uint64_t value) { bytes_allocated += value; }
+
  private:
   static void InitPlatformSignalHandlers();
 
@@ -950,6 +955,9 @@ class Runtime {
       static_cast<uint32_t>(DeoptimizationKind::kLast) + 1];
 
   std::unique_ptr<MemMap> protected_fault_page_;
+
+  uint64_t obj_allocated = 0;
+  uint64_t bytes_allocated = 0;
 
   DISALLOW_COPY_AND_ASSIGN(Runtime);
 };
