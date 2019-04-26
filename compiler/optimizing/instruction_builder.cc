@@ -980,6 +980,14 @@ HNewInstance* HInstructionBuilder::BuildNewInstance(dex::TypeIndex type_index, u
   // Consider classes we haven't resolved as potentially finalizable.
   bool finalizable = (klass == nullptr) || klass->IsFinalizable();
 
+
+  if (klass == nullptr)
+    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceNewInstance())"
+              << ", klass.name=Null";
+  else
+    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceNewInstance())"
+              << ", klass.name=" << klass->GetName();
+
   HNewInstance* new_instance = new (arena_) HNewInstance(
       cls,
       dex_pc,
