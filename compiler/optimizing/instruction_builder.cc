@@ -987,7 +987,7 @@ HNewInstance* HInstructionBuilder::BuildNewInstance(dex::TypeIndex type_index, u
   else
     LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceNewInstance())"
               << ", klass.name=" << klass->GetName();
-
+  AppendInstruction(new (arena_) HTraceNewInstance);
   HNewInstance* new_instance = new (arena_) HNewInstance(
       cls,
       dex_pc,
@@ -1313,6 +1313,8 @@ bool HInstructionBuilder::BuildInstanceFieldAccess(const Instruction& instructio
                                                  *dex_file_,
                                                  dex_pc);
     }
+    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceInstanceFieldSet())";
+    AppendInstruction(new (arena_) HTraceInstanceFieldSet());
     AppendInstruction(field_set);
   } else {
     HInstruction* field_get = nullptr;
@@ -1334,6 +1336,8 @@ bool HInstructionBuilder::BuildInstanceFieldAccess(const Instruction& instructio
                                                  *dex_file_,
                                                  dex_pc);
     }
+    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceInstanceFieldGet())";
+    AppendInstruction(new (arena_) HTraceInstanceFieldGet());
     AppendInstruction(field_get);
     UpdateLocal(source_or_dest_reg, field_get);
   }
@@ -1385,9 +1389,10 @@ void HInstructionBuilder::BuildUnresolvedStaticFieldAccess(const Instruction& in
 
   if (is_put) {
     HInstruction* value = LoadLocal(source_or_dest_reg, field_type);
-    AppendInstruction(
-        new (arena_) HUnresolvedStaticFieldSet(value, field_type, field_index, dex_pc));
+    AppendInstruction(new (arena_) HTraceInstanceFieldSet());
+    AppendInstruction(new (arena_) HUnresolvedStaticFieldSet(value, field_type, field_index, dex_pc));
   } else {
+    AppendInstruction(new (arena_) HTraceInstanceFieldGet());
     AppendInstruction(new (arena_) HUnresolvedStaticFieldGet(field_type, field_index, dex_pc));
     UpdateLocal(source_or_dest_reg, current_block_->GetLastInstruction());
   }
@@ -1486,6 +1491,7 @@ bool HInstructionBuilder::BuildStaticFieldAccess(const Instruction& instruction,
     // We need to keep the class alive before loading the value.
     HInstruction* value = LoadLocal(source_or_dest_reg, field_type);
     DCHECK_EQ(HPhi::ToPhiType(value->GetType()), HPhi::ToPhiType(field_type));
+    AppendInstruction(new (arena_) HTraceInstanceFieldSet());
     AppendInstruction(new (arena_) HStaticFieldSet(cls,
                                                    value,
                                                    resolved_field,
@@ -1497,6 +1503,7 @@ bool HInstructionBuilder::BuildStaticFieldAccess(const Instruction& instruction,
                                                    *dex_file_,
                                                    dex_pc));
   } else {
+    AppendInstruction(new (arena_) HTraceInstanceFieldGet());
     AppendInstruction(new (arena_) HStaticFieldGet(cls,
                                                    resolved_field,
                                                    field_type,
