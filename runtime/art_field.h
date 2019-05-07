@@ -222,6 +222,8 @@ class ArtField FINAL {
   // "int a.b.C.f" (depending on the value of 'with_type').
   static std::string PrettyField(ArtField* f, bool with_type = true)
       REQUIRES_SHARED(Locks::mutator_lock_);
+
+  //When with_type=true, return value looks like "java.lang.String com.example.myapplication.QQMainActivity.qq_s"
   std::string PrettyField(bool with_type = true)
       REQUIRES_SHARED(Locks::mutator_lock_);
 

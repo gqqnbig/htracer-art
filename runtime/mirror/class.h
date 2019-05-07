@@ -381,7 +381,7 @@ class MANAGED Class FINAL : public Object {
     return s < Status::kStatusResolving && s != kStatusErrorResolved && ShouldHaveEmbeddedVTable();
   }
 
-  String* GetName() REQUIRES_SHARED(Locks::mutator_lock_);  // Returns the cached name.
+  String* GetName() REQUIRES_SHARED(Locks::mutator_lock_);  // Returns the cached name. It may be null.
   void SetName(ObjPtr<String> name) REQUIRES_SHARED(Locks::mutator_lock_);  // Sets the cached name.
   // Computes the name, then sets the cached value.
   static String* ComputeName(Handle<Class> h_this) REQUIRES_SHARED(Locks::mutator_lock_)
