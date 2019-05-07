@@ -1290,6 +1290,15 @@ bool HInstructionBuilder::BuildInstanceFieldAccess(const Instruction& instructio
   Primitive::Type field_type = (resolved_field == nullptr)
       ? GetFieldAccessType(*dex_file_, field_index)
       : resolved_field->GetTypeAsPrimitiveType();
+
+  //resolved_field->GetName() returns field name.
+  if (resolved_field != nullptr) {
+    LOG(INFO) << "[QQ] " << (is_put ? "writing field " : "reading field ")
+              << resolved_field->PrettyField(false)
+              << ", field_type=" << Primitive::BoxedDescriptor(field_type);
+  }
+
+
   if (is_put) {
     HInstruction* value = LoadLocal(source_or_dest_reg, field_type);
     HInstruction* field_set = nullptr;
