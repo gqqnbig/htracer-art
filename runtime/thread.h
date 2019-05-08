@@ -766,21 +766,6 @@ class Thread {
   }
 
   template<PointerSize pointer_size>
-  static ThreadOffset<pointer_size> NumObjAllocatedOffset() {
-    return ThreadOffsetFromTlsPtr<pointer_size>(OFFSETOF_MEMBER(tls_ptr_sized_values, num_obj_allocated));
-  }
-
-  template<PointerSize pointer_size>
-  static ThreadOffset<pointer_size> NumIPutOffset() {
-    return ThreadOffsetFromTlsPtr<pointer_size>(OFFSETOF_MEMBER(tls_ptr_sized_values, num_iput));
-  }
-
-  template<PointerSize pointer_size>
-  static ThreadOffset<pointer_size> NumIGetOffset() {
-    return ThreadOffsetFromTlsPtr<pointer_size>(OFFSETOF_MEMBER(tls_ptr_sized_values, num_iget));
-  }
-
-  template<PointerSize pointer_size>
   static ThreadOffset<pointer_size> NumObjAllocatedPtrOffset() {
     return ThreadOffsetFromTlsPtr<pointer_size>(OFFSETOF_MEMBER(tls_ptr_sized_values, num_obj_allocated_ptr));
   }
