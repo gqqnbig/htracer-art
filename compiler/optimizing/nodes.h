@@ -3972,7 +3972,7 @@ class HNewInstance FINAL : public HExpression<1> {
 
 class HTraceNewInstance : public HTemplateInstruction<0> {
 public:
-  explicit HTraceNewInstance(): HTemplateInstruction(SideEffects::None(), 0u) { }
+  HTraceNewInstance(): HTemplateInstruction(SideEffects::None(), 0u) { }
   bool NeedsEnvironment() const OVERRIDE { return true; }
   DECLARE_INSTRUCTION(TraceNewInstance);
 private:
@@ -3981,7 +3981,7 @@ private:
 
 class HTraceInstanceFieldGet : public HTemplateInstruction<0> {
 public:
-  explicit HTraceInstanceFieldGet(): HTemplateInstruction(SideEffects::None(), 0u) { }
+  HTraceInstanceFieldGet(): HTemplateInstruction(SideEffects::None(), 0u) { }
   bool NeedsEnvironment() const OVERRIDE { return true; }
   DECLARE_INSTRUCTION(TraceInstanceFieldGet);
 private:
@@ -3990,7 +3990,7 @@ private:
 
 class HTraceInstanceFieldSet : public HTemplateInstruction<0> {
 public:
-  explicit HTraceInstanceFieldSet(): HTemplateInstruction(SideEffects::None(), 0u) { }
+  HTraceInstanceFieldSet(): HTemplateInstruction(SideEffects::None(), 0u) { }
   bool NeedsEnvironment() const OVERRIDE { return true; }
   DECLARE_INSTRUCTION(TraceInstanceFieldSet);
 private:
