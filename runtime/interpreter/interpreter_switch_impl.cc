@@ -571,6 +571,8 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
                                                          self,
                                                          false,
                                                          do_access_check);
+        self->ObjAllocatedIncrement();
+
         if (LIKELY(c != nullptr)) {
           if (UNLIKELY(c->IsStringClass())) {
             gc::AllocatorType allocator_type = Runtime::Current()->GetHeap()->GetCurrentAllocator();
