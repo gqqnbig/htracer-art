@@ -150,6 +150,8 @@ NO_INLINE static bool DoDexPcMoveEvent(Thread* self,
   }
 }
 
+//There are 3 interpreter implementations, Switch, ComputedGoto, and Mterp.
+//Mterp is the default.
 template<bool do_access_check, bool transaction_active>
 JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
                          ShadowFrame& shadow_frame, JValue result_register,
