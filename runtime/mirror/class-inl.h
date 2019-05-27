@@ -672,7 +672,7 @@ inline ArtField* Class::GetInstanceField(uint32_t i) {
 
 template<VerifyObjectFlags kVerifyFlags>
 inline uint32_t Class::GetReferenceInstanceOffsets() {
-  DCHECK(IsResolved<kVerifyFlags>() || IsErroneous<kVerifyFlags>());
+  DCHECK(IsResolved<kVerifyFlags>() || IsErroneous<kVerifyFlags>()) << ". status is " << GetStatus();
   return GetField32<kVerifyFlags>(OFFSET_OF_OBJECT_MEMBER(Class, reference_instance_offsets_));
 }
 
