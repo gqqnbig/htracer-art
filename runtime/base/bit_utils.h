@@ -144,6 +144,9 @@ constexpr int WhichPowerOf2(T x) {
 
 // For rounding integers.
 // Note: Omit the `n` from T type deduction, deduce only from the `x` argument.
+
+
+//Round x to multiples of n. If not exact multiples, round to floor.
 template<typename T>
 constexpr T RoundDown(T x, typename Identity<T>::type n) WARN_UNUSED;
 
@@ -153,9 +156,11 @@ constexpr T RoundDown(T x, typename Identity<T>::type n) {
   return (x & -n);
 }
 
+//Round x to multiples of n. If not exact multiples, round to ceiling.
 template<typename T>
 constexpr T RoundUp(T x, typename std::remove_reference<T>::type n) WARN_UNUSED;
 
+//Round x to multiples of n. If not exact multiples, round to ceiling.
 template<typename T>
 constexpr T RoundUp(T x, typename std::remove_reference<T>::type n) {
   return RoundDown(x + n - 1, n);
@@ -178,6 +183,7 @@ inline T* AlignUp(T* x, uintptr_t n) {
   return reinterpret_cast<T*>(RoundUp(reinterpret_cast<uintptr_t>(x), n));
 }
 
+//Is x multiple of n
 template<int n, typename T>
 constexpr bool IsAligned(T x) {
   static_assert((n & (n - 1)) == 0, "n is not a power of two");

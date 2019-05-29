@@ -5493,6 +5493,7 @@ bool ClassLinker::LinkClass(Thread* self,
     }
   }
 
+  //java.lang.Object is temp.
   if (!klass->IsTemp() || (!init_done_ && klass->GetClassSize() == class_size)) {
     // We don't need to retire this class as it has no embedded tables or it was created the
     // correct size during class linker initialization.
@@ -7629,7 +7630,9 @@ struct LinkFieldsComparator {
 
 bool ClassLinker::LinkFields(Thread* self,
                              Handle<mirror::Class> klass,
+                             //link static fields or instance fields
                              bool is_static,
+                             //It's an out parameter.
                              size_t* class_size) {
   self->AllowThreadSuspension();
   const size_t num_fields = is_static ? klass->NumStaticFields() : klass->NumInstanceFields();
@@ -7698,6 +7701,7 @@ bool ClassLinker::LinkFields(Thread* self,
     grouped_and_sorted_fields.pop_front();
     num_reference_fields++;
     field->SetOffset(field_offset);
+    //sizeof(mirror::HeapReference<mirror::Object>) = 4
     field_offset = MemberOffset(field_offset.Uint32Value() +
                                 sizeof(mirror::HeapReference<mirror::Object>));
   }

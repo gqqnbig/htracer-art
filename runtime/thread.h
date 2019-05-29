@@ -1698,6 +1698,7 @@ class Thread {
     uint64_t* num_iget_ptr = new uint64_t(0);
     uint64_t* num_iput_ptr = new uint64_t(0);
   } tlsPtr_;
+  // tlsPtr_ is of type tls_ptr_sized_values. That's why semicolon is needed after class definition.
 
   // Guards the 'wait_monitor_' members.
   Mutex* wait_mutex_ DEFAULT_MUTEX_ACQUIRED_AFTER;

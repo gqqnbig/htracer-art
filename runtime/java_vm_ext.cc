@@ -1031,6 +1031,10 @@ void JavaVMExt::VisitRoots(RootVisitor* visitor) {
 
 // JNI Invocation interface.
 
+//it's called by
+// app_process WORKING_DIRECTORY/frameworks/base/cmds/app_process/app_main.cpp
+
+//void* vm_args is a pointer, pointing to unknown type of data. Later we will cast the data to type JavaVMInitArgs.
 extern "C" jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) {
   ScopedTrace trace(__FUNCTION__);
   const JavaVMInitArgs* args = static_cast<JavaVMInitArgs*>(vm_args);

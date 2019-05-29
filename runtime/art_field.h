@@ -98,6 +98,7 @@ class ArtField FINAL {
 
   MemberOffset GetOffsetDuringLinking() REQUIRES_SHARED(Locks::mutator_lock_);
 
+  // Offset to field within an Object.
   void SetOffset(MemberOffset num_bytes) REQUIRES_SHARED(Locks::mutator_lock_);
 
   // field access, null object for static fields
