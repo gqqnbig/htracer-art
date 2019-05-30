@@ -719,6 +719,18 @@ class MANAGED LOCKABLE Object {
   uint32_t x_xpadding_;    // For 8-byte alignment. TODO: get rid of this.
 #endif
 
+
+//Not declare them as public, as C++ will group public fields together.
+
+  //I could use uint8_t whose size is 1. But the total size of this class will not reduce because of byte alignment.
+  //The original size is 8, sizeof(HeapReference<Class>)=4, sizeof(uint32_t)=4.
+  //The size of the class must be multiples of the max size of its member, ie. 8, 12, etc.
+  //Thus even if I set readCount type to be uint8_t, the actual bytes is 10, but it
+  //will be aligned to 12.
+  //https://blog.csdn.net/hairetz/article/details/4084088
+  uint32_t readCount_ = 0; //size is 4.
+  uint32_t writeCount_ = 0;
+
   friend class art::ImageWriter;
   friend class art::Monitor;
   friend struct art::ObjectOffsets;  // for verifying offset information
