@@ -720,7 +720,7 @@ class MANAGED LOCKABLE Object {
 #endif
 
 
-//Not declare them as public, as C++ will group public fields together.
+ public:
 
   //I could use uint8_t whose size is 1. But the total size of this class will not reduce because of byte alignment.
   //The original size is 8, sizeof(HeapReference<Class>)=4, sizeof(uint32_t)=4.
