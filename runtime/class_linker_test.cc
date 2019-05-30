@@ -142,20 +142,26 @@ class ClassLinkerTest : public CommonRuntimeTest {
     EXPECT_EQ(4U, JavaLangObject->NumDirectMethods());
     EXPECT_EQ(11U, JavaLangObject->NumVirtualMethods());
     if (!kUseBrooksReadBarrier) {
-      EXPECT_EQ(2U, JavaLangObject->NumInstanceFields());
-    } else {
       EXPECT_EQ(4U, JavaLangObject->NumInstanceFields());
+    } else {
+      EXPECT_EQ(6U, JavaLangObject->NumInstanceFields());
     }
-    EXPECT_STREQ(JavaLangObject->GetInstanceField(0)->GetName(),
+
+    int fieldIndex=0;
+    EXPECT_STREQ(JavaLangObject->GetInstanceField(fieldIndex)->GetName(),
                  "shadow$_klass_");
-    EXPECT_STREQ(JavaLangObject->GetInstanceField(1)->GetName(),
+    EXPECT_STREQ(JavaLangObject->GetInstanceField(++fieldIndex)->GetName(),
                  "shadow$_monitor_");
     if (kUseBrooksReadBarrier) {
-      EXPECT_STREQ(JavaLangObject->GetInstanceField(2)->GetName(),
+      EXPECT_STREQ(JavaLangObject->GetInstanceField(++fieldIndex)->GetName(),
                    "shadow$_x_rb_ptr_");
-      EXPECT_STREQ(JavaLangObject->GetInstanceField(3)->GetName(),
+      EXPECT_STREQ(JavaLangObject->GetInstanceField(++fieldIndex)->GetName(),
                    "shadow$_x_xpadding_");
     }
+    EXPECT_STREQ(JavaLangObject->GetInstanceField(++fieldIndex)->GetName(),
+                 "shadow$_readCount_");
+    EXPECT_STREQ(JavaLangObject->GetInstanceField(++fieldIndex)->GetName(),
+                 "shadow$_writeCount_");
 
     EXPECT_EQ(0U, JavaLangObject->NumStaticFields());
     EXPECT_EQ(0U, JavaLangObject->NumDirectInterfaces());
@@ -568,6 +574,9 @@ struct ObjectOffsets : public CheckOffsets<mirror::Object> {
     addOffset(OFFSETOF_MEMBER(mirror::Object, x_rb_ptr_), "shadow$_x_rb_ptr_");
     addOffset(OFFSETOF_MEMBER(mirror::Object, x_xpadding_), "shadow$_x_xpadding_");
 #endif
+    addOffset(OFFSETOF_MEMBER(mirror::Object, readCount_), "shadow$_readCount_");
+    addOffset(OFFSETOF_MEMBER(mirror::Object, writeCount_), "shadow$_writeCount_");
+
   };
 };
 
