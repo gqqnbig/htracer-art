@@ -439,7 +439,9 @@ class Runtime {
 
   void PreZygoteFork();
   void InitNonZygoteOrPostFork(
-      JNIEnv* env, bool is_system_server, NativeBridgeAction action, const char* isa);
+      JNIEnv* env, bool is_system_server, NativeBridgeAction action,
+      //Instruction Set Architecture. It takes values like "arm64".
+      const char* isa);
 
   const instrumentation::Instrumentation* GetInstrumentation() const {
     return &instrumentation_;

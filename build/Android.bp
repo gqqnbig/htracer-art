@@ -169,11 +169,13 @@ art_global_defaults {
     ],
 }
 
+//It's used by libartd, defined in art/runtime/Android.bp. d means debug.
 art_debug_defaults {
     name: "art_debug_defaults",
     cflags: [
         "-DDYNAMIC_ANNOTATIONS_ENABLED=1",
         "-DVIXL_DEBUG",
+        //-DNDEBUG is added in build/soong/cc/config/global.go.
         "-UNDEBUG",
     ],
     asflags: [

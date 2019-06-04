@@ -59,6 +59,9 @@ static constexpr bool kDeoptimizeForAccurateMethodEntryExitListeners = true;
 // the events they are listening for. The call backs supply the thread, method and dex_pc the event
 // occurred upon. The thread may or may not be Thread::Current().
 struct InstrumentationListener {
+//The default accessor of a struct is public.
+//Class can inherit struct.
+
   InstrumentationListener() {}
   virtual ~InstrumentationListener() {}
 
