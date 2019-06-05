@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.5)
 project(libartd-compiler)
 set(ANDROID_ROOT ${CMAKE_SOURCE_DIR}/..)
 
-set(CMAKE_C_COMPILER "${ANDROID_ROOT}/prebuilts/clang/host/linux-x86/clang-4053586/bin/clang")
-set(CMAKE_CXX_COMPILER "${ANDROID_ROOT}/prebuilts/clang/host/linux-x86/clang-4053586/bin/clang++")
+set(CMAKE_C_COMPILER "${ANDROID_ROOT}/prebuilts/clang/host/linux-x86/clang-stable/bin/clang")
+set(CMAKE_CXX_COMPILER "${ANDROID_ROOT}/prebuilts/clang/host/linux-x86/clang-stable/bin/clang++")
 list(APPEND
         SOURCE_FILES
         ${ANDROID_ROOT}/art/compiler/compiled_method.cc
