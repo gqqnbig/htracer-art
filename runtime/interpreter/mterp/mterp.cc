@@ -407,10 +407,26 @@ extern "C" size_t MterpNewInstance(ShadowFrame* shadow_frame, Thread* self, uint
   return true;
 }
 
+
+extern "C" size_t MterpIgetObject(ShadowFrame* shadow_frame, uint16_t* dex_pc_ptr,
+                                  uint32_t inst_data, Thread* self)
+REQUIRES_SHARED(Locks::mutator_lock_) {
+  const Instruction* inst = Instruction::At(dex_pc_ptr);
+
+  LOG(INFO) << "Call MterpIgetObject";
+
+  return DoFieldGet<InstanceObjectRead, Primitive::kPrimNot, false>
+          (self, *shadow_frame, inst, inst_data);
+}
+
 extern "C" size_t MterpSputObject(ShadowFrame* shadow_frame, uint16_t* dex_pc_ptr,
                                 uint32_t inst_data, Thread* self)
     REQUIRES_SHARED(Locks::mutator_lock_) {
   const Instruction* inst = Instruction::At(dex_pc_ptr);
+
+  LOG(INFO) << "Call MterpSputObject";
+
+
   return DoFieldPut<StaticObjectWrite, Primitive::kPrimNot, false, false>
       (self, *shadow_frame, inst, inst_data);
 }
@@ -420,6 +436,9 @@ extern "C" size_t MterpIputObject(ShadowFrame* shadow_frame,
                                   uint32_t inst_data,
                                   Thread* self)
     REQUIRES_SHARED(Locks::mutator_lock_) {
+
+  LOG(INFO) << "Call MterpIputObject";
+
   const Instruction* inst = Instruction::At(dex_pc_ptr);
   return DoFieldPut<InstanceObjectWrite, Primitive::kPrimNot, false, false>
       (self, *shadow_frame, inst, inst_data);
@@ -430,6 +449,8 @@ extern "C" size_t MterpIputObjectQuick(ShadowFrame* shadow_frame,
                                        uint32_t inst_data)
     REQUIRES_SHARED(Locks::mutator_lock_) {
   const Instruction* inst = Instruction::At(dex_pc_ptr);
+  //LOG(INFO) << "MterpIputObjectQuick";
+
   return DoIPutQuick<Primitive::kPrimNot, false>(*shadow_frame, inst, inst_data);
 }
 
@@ -888,6 +909,10 @@ extern "C" mirror::Object* artIGetObjectFromMterp(mirror::Object* obj,
     ThrowNullPointerExceptionFromInterpreter();
     return nullptr;
   }
+
+  LOG(INFO) << "Call artIGetObjectFromMterp";
+
+
   return obj->GetFieldObject<mirror::Object>(MemberOffset(field_offset));
 }
 

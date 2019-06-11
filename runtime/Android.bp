@@ -200,6 +200,7 @@ cc_defaults {
         "reference_table.cc",
         "reflection.cc",
         "runtime.cc",
+		"fieldInstrumentationListener.cc",
         "runtime_callbacks.cc",
         "runtime_common.cc",
         "runtime_options.cc",

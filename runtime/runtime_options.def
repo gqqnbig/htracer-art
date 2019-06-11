@@ -146,4 +146,11 @@ RUNTIME_OPTIONS_KEY (void (*)(),          HookAbort,                      nullpt
 
 RUNTIME_OPTIONS_KEY (bool,                SlowDebug,                      false)
 
+
+RUNTIME_OPTIONS_KEY (bool,                EnableRWProfiling,            false)
+
+RUNTIME_OPTIONS_KEY (bool,                EnableHeapSizeProfiling,            false)
+
+
+
 #undef RUNTIME_OPTIONS_KEY

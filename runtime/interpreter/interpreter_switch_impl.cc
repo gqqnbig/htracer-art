@@ -176,6 +176,11 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
     shadow_frame.SetDexPC(dex_pc);
     TraceExecution(shadow_frame, inst, dex_pc);
     inst_data = inst->Fetch16(0);
+
+    if(self->enableRWProfiling)
+      LOG(INFO) << "See " << inst->Opcode(inst_data);
+
+
     switch (inst->Opcode(inst_data)) {
       case Instruction::NOP:
         PREAMBLE();
@@ -1254,6 +1259,11 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
       }
       case Instruction::IGET: {
         PREAMBLE();
+
+
+        if(self->enableRWProfiling)
+          LOG(INFO) << "Instruction::IGET";
+
         bool success = DoFieldGet<InstancePrimitiveRead, Primitive::kPrimInt, do_access_check>(
             self, shadow_frame, inst, inst_data);
         POSSIBLY_HANDLE_PENDING_EXCEPTION(!success, Next_2xx);
@@ -1275,6 +1285,10 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
       }
       case Instruction::IGET_QUICK: {
         PREAMBLE();
+
+        if(self->enableRWProfiling)
+          LOG(INFO) << "Instruction::IGET_QUICK";
+
         bool success = DoIGetQuick<Primitive::kPrimInt>(shadow_frame, inst, inst_data);
         POSSIBLY_HANDLE_PENDING_EXCEPTION(!success, Next_2xx);
         break;
@@ -1359,6 +1373,10 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
       }
       case Instruction::SGET_OBJECT: {
         PREAMBLE();
+
+        if(self->enableRWProfiling)
+          LOG(INFO) << "Instruction::SGET_OBJECT";
+
         bool success = DoFieldGet<StaticObjectRead, Primitive::kPrimNot, do_access_check>(
             self, shadow_frame, inst, inst_data);
         POSSIBLY_HANDLE_PENDING_EXCEPTION(!success, Next_2xx);

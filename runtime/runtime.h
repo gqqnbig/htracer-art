@@ -39,6 +39,7 @@
 #include "process_state.h"
 #include "quick/quick_method_frame_info.h"
 #include "runtime_stats.h"
+#include "fieldInstrumentationListener.h"
 
 namespace art {
 
@@ -684,6 +685,9 @@ class Runtime {
   void ObjAllocatedIncrement(uint64_t value = 1) { obj_allocated += value; }
   void BytesAllocatedIncrement(uint64_t value) { bytes_allocated += value; }
 
+  void StopObjectProfiling();
+  void StartObjectProfiling();
+
  private:
   static void InitPlatformSignalHandlers();
 
@@ -933,6 +937,11 @@ class Runtime {
 
   // Whether zygote code is in a section that should not start threads.
   bool zygote_no_threads_;
+
+  FieldInstrumentationListener* fieldInstrumentationListener = new FieldInstrumentationListener();
+  bool enableRWProfiling = false;
+  bool enableHeapSizeProfiling = false;
+
 
   // Saved environment.
   class EnvSnapshot {

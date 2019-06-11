@@ -201,6 +201,7 @@ inline char** GetEnviron() { return environ; }
 #endif
 }  // namespace
 
+
 Runtime::Runtime()
     : resolution_method_(nullptr),
       imt_conflict_method_(nullptr),
@@ -836,11 +837,26 @@ void Runtime::InitNonZygoteOrPostFork(
     }
   }
 
+  LOG(INFO) << "InitNonZygoteOrPostFork";
+
   // Create the thread pools.
   heap_->CreateThreadPool();
   // Reset the gc performance data at zygote fork so that the GCs
   // before fork aren't attributed to an app.
   heap_->ResetGcPerformanceInfo();
+
+  Thread* self = Thread::Current();
+  self->enableRWProfiling = this->enableRWProfiling;
+  self->enableHeapSizeProfiling = this->enableHeapSizeProfiling;
+
+  if (this->enableRWProfiling) {
+    Locks::mutator_lock_->ExclusiveLock(self);
+    //instrumentation_.r
+    instrumentation_.AddListener(new FieldInstrumentationListener(), instrumentation::Instrumentation::kFieldRead |
+                                                                     instrumentation::Instrumentation::kFieldWritten);
+    Locks::mutator_lock_->ExclusiveUnlock(self);
+  }
+
 
   // We may want to collect profiling samples for system server, but we never want to JIT there.
   if ((!is_system_server || !jit_options_->UseJitCompilation()) &&
@@ -857,6 +873,23 @@ void Runtime::InitNonZygoteOrPostFork(
   // Start the JDWP thread. If the command-line debugger flags specified "suspend=y",
   // this will pause the runtime, so we probably want this to come last.
   Dbg::StartJdwp();
+}
+
+
+void Runtime::StopObjectProfiling() {
+  Thread* self = Thread::Current();
+  Locks::mutator_lock_->ExclusiveLock(self);
+  instrumentation_.RemoveListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
+                                                                      instrumentation::Instrumentation::kFieldWritten);
+  Locks::mutator_lock_->ExclusiveUnlock(self);
+}
+
+void Runtime::StartObjectProfiling() {
+  Thread* self = Thread::Current();
+  Locks::mutator_lock_->ExclusiveLock(self);
+  instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
+                                                                   instrumentation::Instrumentation::kFieldWritten);
+  Locks::mutator_lock_->ExclusiveUnlock(self);
 }
 
 void Runtime::StartSignalCatcher() {
@@ -1295,6 +1328,9 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   // objects. We can't supply a thread group yet; it will be fixed later. Since we are the main
   // thread, we do not get a java peer.
   Thread* self = Thread::Attach("main", false, nullptr, false);
+  this->enableRWProfiling = runtime_options.GetOrDefault(Opt::EnableRWProfiling);
+  this->enableHeapSizeProfiling = runtime_options.GetOrDefault(Opt::EnableHeapSizeProfiling);
+
   CHECK_EQ(self->GetThreadId(), ThreadList::kMainThreadId);
   CHECK(self != nullptr);
 

@@ -294,6 +294,7 @@ list(APPEND
         ${ANDROID_ROOT}/art/runtime/reference_table.cc
         ${ANDROID_ROOT}/art/runtime/reflection.cc
         ${ANDROID_ROOT}/art/runtime/runtime.cc
+        ${ANDROID_ROOT}/art/runtime/fieldInstrumentationListener.cc
         ${ANDROID_ROOT}/art/runtime/runtime_callbacks.cc
         ${ANDROID_ROOT}/art/runtime/runtime_common.cc
         ${ANDROID_ROOT}/art/runtime/runtime_options.cc

@@ -527,6 +527,10 @@ class Thread {
     return poison_object_cookie_;
   }
 
+
+  bool enableRWProfiling=false;
+  bool enableHeapSizeProfiling=false;
+
  private:
   void NotifyLocked(Thread* self) REQUIRES(wait_mutex_);
 

@@ -166,6 +166,7 @@ static void EnableDebugFeatures(uint32_t debug_flags) {
     DEBUG_ALWAYS_JIT                = 1 << 6,
     DEBUG_NATIVE_DEBUGGABLE         = 1 << 7,
     DEBUG_JAVA_DEBUGGABLE           = 1 << 8,
+    DEBUG_ENABLE_PROFILING = 1 << 9,
   };
 
   Runtime* const runtime = Runtime::Current();
@@ -215,6 +216,11 @@ static void EnableDebugFeatures(uint32_t debug_flags) {
     CHECK(jit_options != nullptr);
     jit_options->SetJitAtFirstUse();
     debug_flags &= ~DEBUG_ALWAYS_JIT;
+  }
+
+  runtime->StopObjectProfiling();
+  if ((debug_flags & DEBUG_ENABLE_PROFILING) != 0) {
+    runtime->StartObjectProfiling();
   }
 
   bool needs_non_debuggable_classes = false;

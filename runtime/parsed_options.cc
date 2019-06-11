@@ -318,6 +318,14 @@ std::unique_ptr<RuntimeParser> ParsedOptions::MakeParser(bool ignore_unrecognize
           .WithType<bool>()
           .WithValueMap({{"false", false}, {"true", true}})
           .IntoKey(M::SlowDebug)
+      .Define("-EnableRWProfiling:_")
+          .WithType<bool>()
+          .WithValueMap({{"false", false}, {"true", true}})
+          .IntoKey(M::EnableRWProfiling)
+      .Define("-EnableHeapSizeProfiling:_")
+          .WithType<bool>()
+          .WithValueMap({{"false", false}, {"true", true}})
+          .IntoKey(M::EnableHeapSizeProfiling)
       .Ignore({
           "-ea", "-da", "-enableassertions", "-disableassertions", "--runtime-arg", "-esa",
           "-dsa", "-enablesystemassertions", "-disablesystemassertions", "-Xrs", "-Xint:_",
@@ -666,6 +674,10 @@ void ParsedOptions::Usage(const char* fmt, ...) {
   //                      "requires -Xexperimental:agent, some features might not be supported)\n");
   UsageMessage(stream, "  -agentpath:library_path=options (Experimental feature, "
                        "requires -Xexperimental:agent, some features might not be supported)\n");
+  UsageMessage(stream, "\n");
+
+  UsageMessage(stream, "The following profiler debugging options are supported:\n");
+  UsageMessage(stream, "  -EnableProfiling:bool\n");
   UsageMessage(stream, "\n");
 
   UsageMessage(stream, "The following extended options are supported:\n");
