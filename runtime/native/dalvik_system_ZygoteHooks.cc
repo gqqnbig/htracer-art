@@ -221,6 +221,7 @@ static void EnableDebugFeatures(uint32_t debug_flags) {
   runtime->StopObjectProfiling();
   if ((debug_flags & DEBUG_ENABLE_PROFILING) != 0) {
     runtime->StartObjectProfiling();
+    debug_flags &= ~DEBUG_ENABLE_PROFILING;
   }
 
   bool needs_non_debuggable_classes = false;
