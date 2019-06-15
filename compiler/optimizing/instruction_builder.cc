@@ -981,12 +981,12 @@ HNewInstance* HInstructionBuilder::BuildNewInstance(dex::TypeIndex type_index, u
   bool finalizable = (klass == nullptr) || klass->IsFinalizable();
 
 
-  if (klass == nullptr)
-    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceNewInstance())"
-              << ", klass.name=Null";
-  else
-    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceNewInstance())"
-              << ", klass.name=" << klass->GetName();
+//  if (klass == nullptr)
+//    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceNewInstance())"
+//              << ", klass.name=Null";
+//  else
+//    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceNewInstance())"
+//              << ", klass.name=" << klass->GetName();
   AppendInstruction(new (arena_) HTraceNewInstance);
   HNewInstance* new_instance = new (arena_) HNewInstance(
       cls,
@@ -1293,9 +1293,9 @@ bool HInstructionBuilder::BuildInstanceFieldAccess(const Instruction& instructio
 
   //resolved_field->GetName() returns field name.
   if (resolved_field != nullptr) {
-    LOG(INFO) << "[QQ] " << (is_put ? "writing field " : "reading field ")
-              << resolved_field->PrettyField(false)
-              << ", field_type=" << Primitive::BoxedDescriptor(field_type);
+//    LOG(INFO) << "[QQ] " << (is_put ? "writing field " : "reading field ")
+//              << resolved_field->PrettyField(false)
+//              << ", field_type=" << Primitive::BoxedDescriptor(field_type);
   }
 
 
@@ -1322,7 +1322,7 @@ bool HInstructionBuilder::BuildInstanceFieldAccess(const Instruction& instructio
                                                  *dex_file_,
                                                  dex_pc);
     }
-    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceInstanceFieldSet())";
+    //LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceInstanceFieldSet())";
     AppendInstruction(new (arena_) HTraceInstanceFieldSet());
     AppendInstruction(field_set);
   } else {
@@ -1345,7 +1345,7 @@ bool HInstructionBuilder::BuildInstanceFieldAccess(const Instruction& instructio
                                                  *dex_file_,
                                                  dex_pc);
     }
-    LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceInstanceFieldGet())";
+    //LOG(INFO) << "[HT] [InstructionBuilder] AppendInstruction(HTraceInstanceFieldGet())";
     AppendInstruction(new (arena_) HTraceInstanceFieldGet());
     AppendInstruction(field_get);
     UpdateLocal(source_or_dest_reg, field_get);

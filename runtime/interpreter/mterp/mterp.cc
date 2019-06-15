@@ -424,7 +424,7 @@ extern "C" size_t MterpSputObject(ShadowFrame* shadow_frame, uint16_t* dex_pc_pt
     REQUIRES_SHARED(Locks::mutator_lock_) {
   const Instruction* inst = Instruction::At(dex_pc_ptr);
 
-  LOG(INFO) << "Call MterpSputObject";
+  //LOG(INFO) << "Call MterpSputObject";
 
 
   return DoFieldPut<StaticObjectWrite, Primitive::kPrimNot, false, false>
@@ -437,7 +437,7 @@ extern "C" size_t MterpIputObject(ShadowFrame* shadow_frame,
                                   Thread* self)
     REQUIRES_SHARED(Locks::mutator_lock_) {
 
-  LOG(INFO) << "Call MterpIputObject";
+  //LOG(INFO) << "Call MterpIputObject";
 
   const Instruction* inst = Instruction::At(dex_pc_ptr);
   return DoFieldPut<InstanceObjectWrite, Primitive::kPrimNot, false, false>
@@ -910,7 +910,7 @@ extern "C" mirror::Object* artIGetObjectFromMterp(mirror::Object* obj,
     return nullptr;
   }
 
-  LOG(INFO) << "Call artIGetObjectFromMterp";
+  //LOG(INFO) << "Call artIGetObjectFromMterp";
 
 
   return obj->GetFieldObject<mirror::Object>(MemberOffset(field_offset));

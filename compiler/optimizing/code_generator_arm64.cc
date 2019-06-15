@@ -5265,7 +5265,7 @@ void InstructionCodeGeneratorARM64::VisitNewArray(HNewArray* instruction) {
 void LocationsBuilderARM64::VisitTraceNewInstance(HTraceNewInstance* instruction ATTRIBUTE_UNUSED) { }
 void InstructionCodeGeneratorARM64::VisitTraceNewInstance(HTraceNewInstance* instruction ATTRIBUTE_UNUSED) {
 
-  LOG(INFO) << "[HT] [CodeGen] VisitTraceNewInstance()";
+  //LOG(INFO) << "[HT] [CodeGen] VisitTraceNewInstance()";
 
   UseScratchRegisterScope temps(GetVIXLAssembler());
   Register reg_num_obj_allocated_ptr = temps.AcquireX();
@@ -5280,7 +5280,7 @@ void InstructionCodeGeneratorARM64::VisitTraceNewInstance(HTraceNewInstance* ins
 void LocationsBuilderARM64::VisitTraceInstanceFieldGet(art::HTraceInstanceFieldGet *instruction ATTRIBUTE_UNUSED) { }
 void InstructionCodeGeneratorARM64::VisitTraceInstanceFieldGet(art::HTraceInstanceFieldGet *instruction ATTRIBUTE_UNUSED) {
 
-  LOG(INFO) << "[HT] [CodeGen] VisitTraceInstanceFieldGet()";
+  //LOG(INFO) << "[HT] [CodeGen] VisitTraceInstanceFieldGet()";
 
   UseScratchRegisterScope temps(GetVIXLAssembler());
   Register reg_num_iget_ptr = temps.AcquireX();
@@ -5295,7 +5295,7 @@ void InstructionCodeGeneratorARM64::VisitTraceInstanceFieldGet(art::HTraceInstan
 void LocationsBuilderARM64::VisitTraceInstanceFieldSet(art::HTraceInstanceFieldSet *instruction ATTRIBUTE_UNUSED) { }
 void InstructionCodeGeneratorARM64::VisitTraceInstanceFieldSet(art::HTraceInstanceFieldSet *instruction ATTRIBUTE_UNUSED) {
 
-  LOG(INFO) << "[HT] [CodeGen] VisitTraceInstanceFieldSet()";
+  //LOG(INFO) << "[HT] [CodeGen] VisitTraceInstanceFieldSet()";
 
   UseScratchRegisterScope temps(GetVIXLAssembler());
   Register reg_num_iput_ptr = temps.AcquireX();
