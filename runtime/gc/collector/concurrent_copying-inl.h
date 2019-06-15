@@ -96,6 +96,7 @@ inline mirror::Object* ConcurrentCopying::MarkImmuneSpace(mirror::Object* ref) {
   return ref;
 }
 
+//marks reacheable objects
 template<bool kGrayImmuneObject, bool kFromGCThread>
 inline mirror::Object* ConcurrentCopying::Mark(mirror::Object* from_ref,
                                                mirror::Object* holder,
@@ -103,6 +104,15 @@ inline mirror::Object* ConcurrentCopying::Mark(mirror::Object* from_ref,
   if (from_ref == nullptr) {
     return nullptr;
   }
+
+  if (from_ref->readCount_ > 0 || from_ref->writeCount_ > 0) {
+    DCHECK_NE(from_ref->GetLockWord(false).GetState(), LockWord::LockState::kForwardingAddress)
+              << "If an object is ForwardingAddress, its read write count should be cleared to 0 in ConcurrentCopying::Copy.";
+    LOG(INFO) << "object profiling: hash=" << from_ref->IdentityHashCode()
+              << ",type=" << from_ref->PrettyTypeOf()
+              << ",read=" << from_ref->readCount_ << ",write=" << from_ref->writeCount_;
+  }
+
   DCHECK(heap_->collector_type_ == kCollectorTypeCC);
   if (kFromGCThread) {
     DCHECK(is_active_);

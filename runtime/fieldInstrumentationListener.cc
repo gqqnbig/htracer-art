@@ -11,9 +11,6 @@ void FieldInstrumentationListener::FieldRead(Thread* thread, Handle<mirror::Obje
   } else {
     DCHECK(this_object.IsNull() == false);
     this_object.Get()->readCount_++;
-    LOG(INFO) << "FieldInstrumentationListener read: object=" << this_object->IdentityHashCode()
-              << ", field=" << field->PrettyField(true)
-              << ", readCount=" << this_object.Get()->readCount_ << ", writeCount=" << this_object.Get()->writeCount_;
   }
 }
 
@@ -25,9 +22,6 @@ void FieldInstrumentationListener::FieldWritten(Thread* thread, Handle<mirror::O
   } else {
     DCHECK(this_object.IsNull() == false);
     this_object.Get()->writeCount_++;
-    LOG(INFO) << "FieldInstrumentationListener write: object=" << this_object->IdentityHashCode()
-              << ", field=" << field->PrettyField(true)
-              << ", readCount=" << this_object.Get()->readCount_ << ", writeCount=" << this_object.Get()->writeCount_;
   }
 }
 }

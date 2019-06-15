@@ -2308,6 +2308,10 @@ mirror::Object* ConcurrentCopying::Copy(mirror::Object* from_ref,
   to_ref->SetClass(klass);
   to_ref->readCount_ = from_ref->readCount_;
   to_ref->writeCount_ = from_ref->writeCount_;
+  //from_ref will be iterated in ConcurrentCopying::Mark. ConcurrentCopying::Mark only output log if
+  //any count >0. Here I clean up from_ref, so that ConcurrentCopying::Mark doesn't have to check lock word state.
+  from_ref->readCount_ = 0;
+  from_ref->writeCount_ = 0;
 
   const size_t kObjectHeaderSize = sizeof(mirror::Object);
   DCHECK_GE(obj_size, kObjectHeaderSize);
