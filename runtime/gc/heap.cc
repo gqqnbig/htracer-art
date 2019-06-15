@@ -2591,6 +2591,10 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
       default:
         LOG(FATAL) << "Invalid collector type " << static_cast<size_t>(collector_type_);
     }
+
+    if (collector_type_ != kCollectorTypeCC)
+      LOG(WARNING) << "Object profiling doesn't support collector_type_ " << collector_type_ << ".";
+
     if (collector != mark_compact_collector_ && collector != concurrent_copying_collector_) {
       temp_space_->GetMemMap()->Protect(PROT_READ | PROT_WRITE);
       if (kIsDebugBuild) {
