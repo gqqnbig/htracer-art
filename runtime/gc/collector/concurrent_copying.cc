@@ -2306,6 +2306,9 @@ mirror::Object* ConcurrentCopying::Copy(mirror::Object* from_ref,
 
   // Copy the object excluding the lock word since that is handled in the loop.
   to_ref->SetClass(klass);
+  to_ref->readCount_ = from_ref->readCount_;
+  to_ref->writeCount_ = from_ref->writeCount_;
+
   const size_t kObjectHeaderSize = sizeof(mirror::Object);
   DCHECK_GE(obj_size, kObjectHeaderSize);
   static_assert(kObjectHeaderSize == sizeof(mirror::HeapReference<mirror::Class>) +
