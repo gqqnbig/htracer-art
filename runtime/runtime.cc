@@ -851,8 +851,7 @@ void Runtime::InitNonZygoteOrPostFork(
 
   if (this->enableRWProfiling) {
     Locks::mutator_lock_->ExclusiveLock(self);
-    //instrumentation_.r
-    instrumentation_.AddListener(new FieldInstrumentationListener(), instrumentation::Instrumentation::kFieldRead |
+    instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                      instrumentation::Instrumentation::kFieldWritten);
     Locks::mutator_lock_->ExclusiveUnlock(self);
   }
