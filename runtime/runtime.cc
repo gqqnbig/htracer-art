@@ -389,6 +389,7 @@ Runtime::~Runtime() {
   delete heap_;
   delete intern_table_;
   delete oat_file_manager_;
+  delete fieldInstrumentationListener;
   Thread::Shutdown();
   QuasiAtomic::Shutdown();
   verifier::MethodVerifier::Shutdown();
