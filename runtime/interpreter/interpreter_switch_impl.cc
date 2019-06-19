@@ -594,6 +594,9 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
         if (UNLIKELY(obj == nullptr)) {
           HANDLE_PENDING_EXCEPTION();
         } else {
+          Runtime::Current()->fieldInstrumentationListener->LogObjectAllocation(obj.Ptr(), method, dex_pc);
+
+
           obj->GetClass()->AssertInitializedOrInitializingInThread(self);
           // Don't allow finalizable objects to be allocated during a transaction since these can't
           // be finalized without a started runtime.
