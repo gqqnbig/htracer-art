@@ -292,6 +292,7 @@ Runtime::~Runtime() {
     LOG(WARNING) << "Current thread not detached in Runtime shutdown";
   }
 
+  fieldInstrumentationListener->ClosePerfLog();
   if (dump_gc_performance_on_shutdown_) {
     // This can't be called from the Heap destructor below because it
     // could call RosAlloc::InspectAll() which needs the thread_list
@@ -855,6 +856,7 @@ void Runtime::InitNonZygoteOrPostFork(
     instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                      instrumentation::Instrumentation::kFieldWritten);
     Locks::mutator_lock_->ExclusiveUnlock(self);
+    this->fieldInstrumentationListener->OpenPerfLog();
   }
 
 
@@ -882,6 +884,7 @@ void Runtime::StopObjectProfiling() {
   instrumentation_.RemoveListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                       instrumentation::Instrumentation::kFieldWritten);
   Locks::mutator_lock_->ExclusiveUnlock(self);
+  this->fieldInstrumentationListener->ClosePerfLog();
 }
 
 void Runtime::StartObjectProfiling() {
@@ -890,6 +893,7 @@ void Runtime::StartObjectProfiling() {
   instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                    instrumentation::Instrumentation::kFieldWritten);
   Locks::mutator_lock_->ExclusiveUnlock(self);
+  this->fieldInstrumentationListener->OpenPerfLog();
 }
 
 void Runtime::StartSignalCatcher() {

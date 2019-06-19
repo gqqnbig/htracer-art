@@ -1,6 +1,7 @@
 #ifndef ART_RUNTIME_FIELDINSTRUMENTATIONLISTENER_H
 #define ART_RUNTIME_FIELDINSTRUMENTATIONLISTENER_H
 
+#include <fstream>
 #include "instrumentation.h"
 #include "art_field.h"
 #include "handle.h"
@@ -11,7 +12,9 @@ namespace art {
 class FieldInstrumentationListener final : public instrumentation::InstrumentationListener {
  public:
 
-  virtual ~FieldInstrumentationListener() {}
+  virtual ~FieldInstrumentationListener() {
+    ClosePerfLog();
+  }
 
   // Call-back for when a method is entered.
   void MethodEntered(Thread* thread,
@@ -96,6 +99,14 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
                                 uint32_t dex_pc,
                                 ArtMethod* callee)
   override REQUIRES_SHARED(Locks::mutator_lock_) {}
+
+  void LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc) REQUIRES_SHARED(Locks::mutator_lock_);
+
+  void OpenPerfLog();
+
+  void ClosePerfLog();
+
+  std::ofstream log;
 };
 }
 
