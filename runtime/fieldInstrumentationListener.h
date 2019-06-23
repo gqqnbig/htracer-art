@@ -10,11 +10,11 @@ namespace art {
 
 
 #define PROFILE_LOG2(fieldInstrumentationListener, x) \
- time_t n= time(nullptr); \
+ {time_t n= time(nullptr); \
  struct tm *local=localtime(&n); \
  char buf[80]; \
  strftime(buf,80,"%Y-%m-%d %H:%M:%S ",local); \
- fieldInstrumentationListener->log << buf << x << std::endl
+ fieldInstrumentationListener->log << buf << x << std::endl;}
 
 #define PROFILE_LOG1(x) PROFILE_LOG2(Runtime::Current()->fieldInstrumentationListener, x)
 
