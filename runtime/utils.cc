@@ -791,6 +791,11 @@ std::string GetDefaultBootImageLocation(std::string* error_msg) {
 void GetDalvikCache(const char* subdir, const bool create_if_absent, std::string* dalvik_cache,
                     bool* have_android_data, bool* dalvik_cache_exists, bool* is_global_cache) {
   CHECK(subdir != nullptr);
+  CHECK(dalvik_cache!= nullptr);
+  CHECK(have_android_data!=nullptr);
+  CHECK(dalvik_cache_exists!=nullptr);
+  CHECK(is_global_cache!=nullptr);
+
   std::string error_msg;
   const char* android_data = GetAndroidDataSafe(&error_msg);
   if (android_data == nullptr) {
