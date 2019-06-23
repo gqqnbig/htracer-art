@@ -271,6 +271,13 @@ static void ZygoteHooks_nativePostForkChild(JNIEnv* env,
                                             jboolean is_system_server,
                                             jstring instruction_set,
                                             jstring dataDir) {
+  if(dataDir!= nullptr) {
+    ScopedUtfChars dataDir_string(env, dataDir);
+    LOG(INFO) << "ZygoteHooks_nativePostForkChild: dataDir=" << dataDir_string.c_str();
+  }
+  else
+    LOG(INFO) << "ZygoteHooks_nativePostForkChild: dataDir=null";
+
   Thread* thread = reinterpret_cast<Thread*>(token);
   // Our system thread ID, etc, has changed so reset Thread state.
   thread->InitAfterFork();
@@ -322,15 +329,24 @@ static void ZygoteHooks_nativePostForkChild(JNIEnv* env,
   if (instruction_set != nullptr && !is_system_server) {
     ScopedUtfChars isa_string(env, instruction_set);
     InstructionSet isa = GetInstructionSetFromString(isa_string.c_str());
+    ScopedUtfChars dataDir_string(env, dataDir);
+
     Runtime::NativeBridgeAction action = Runtime::NativeBridgeAction::kUnload;
     if (isa != kNone && isa != kRuntimeISA) {
       action = Runtime::NativeBridgeAction::kInitialize;
     }
     Runtime::Current()->InitNonZygoteOrPostFork(
-        env, is_system_server, action, isa_string.c_str());
+        env, is_system_server, action, isa_string.c_str(), dataDir_string.c_str());
   } else {
-    Runtime::Current()->InitNonZygoteOrPostFork(
-        env, is_system_server, Runtime::NativeBridgeAction::kUnload, nullptr);
+    if(dataDir!=nullptr) {
+      ScopedUtfChars dataDir_string(env, dataDir);
+      Runtime::Current()->InitNonZygoteOrPostFork(
+          env, is_system_server, Runtime::NativeBridgeAction::kUnload, nullptr, dataDir_string.c_str());
+    }
+    else
+      Runtime::Current()->InitNonZygoteOrPostFork(
+          env, is_system_server, Runtime::NativeBridgeAction::kUnload, nullptr, nullptr);
+
   }
 }
 
