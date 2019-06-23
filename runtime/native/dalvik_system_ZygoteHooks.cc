@@ -269,7 +269,8 @@ static void ZygoteHooks_nativePostForkChild(JNIEnv* env,
                                             jlong token,
                                             jint debug_flags,
                                             jboolean is_system_server,
-                                            jstring instruction_set) {
+                                            jstring instruction_set,
+                                            jstring dataDir) {
   Thread* thread = reinterpret_cast<Thread*>(token);
   // Our system thread ID, etc, has changed so reset Thread state.
   thread->InitAfterFork();
@@ -345,7 +346,7 @@ static void ZygoteHooks_stopZygoteNoThreadCreation(JNIEnv* env ATTRIBUTE_UNUSED,
 
 static JNINativeMethod gMethods[] = {
   NATIVE_METHOD(ZygoteHooks, nativePreFork, "()J"),
-  NATIVE_METHOD(ZygoteHooks, nativePostForkChild, "(JIZLjava/lang/String;)V"),
+  NATIVE_METHOD(ZygoteHooks, nativePostForkChild, "(JIZLjava/lang/String;Ljava/lang/String;)V"),
   NATIVE_METHOD(ZygoteHooks, startZygoteNoThreadCreation, "()V"),
   NATIVE_METHOD(ZygoteHooks, stopZygoteNoThreadCreation, "()V"),
 };
