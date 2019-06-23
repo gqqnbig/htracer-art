@@ -161,6 +161,11 @@
 #include <android/set_abort_message.h>
 #endif
 
+
+#include <fstream>
+#include "os.h"
+#include <pwd.h>
+
 namespace art {
 
 // If a signal isn't handled properly, enable a handler that attempts to dump the Java stack.
@@ -780,7 +785,7 @@ bool Runtime::Start() {
     InitNonZygoteOrPostFork(self->GetJniEnv(),
                             /* is_system_server */ false,
                             action,
-                            GetInstructionSetString(kRuntimeISA));
+                            GetInstructionSetString(kRuntimeISA), nullptr);
   }
 
   // Send the initialized phase event. Send it before starting daemons, as otherwise
@@ -822,8 +827,7 @@ void Runtime::EndThreadBirth() REQUIRES(Locks::runtime_shutdown_lock_) {
   }
 }
 
-void Runtime::InitNonZygoteOrPostFork(
-    JNIEnv* env, bool is_system_server, NativeBridgeAction action, const char* isa) {
+void Runtime::InitNonZygoteOrPostFork(JNIEnv* env, bool is_system_server, NativeBridgeAction action, const char* isa, const char* dataDir) {
   is_zygote_ = false;
 
   if (is_native_bridge_loaded_) {
