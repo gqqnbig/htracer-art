@@ -685,6 +685,8 @@ class Runtime {
   void ObjAllocatedIncrement(uint64_t value = 1) { obj_allocated += value; }
   void BytesAllocatedIncrement(uint64_t value) { bytes_allocated += value; }
 
+  bool enableRWProfiling = false;
+  bool enableHeapSizeProfiling = false;
   FieldInstrumentationListener* fieldInstrumentationListener = new FieldInstrumentationListener();
   void StopObjectProfiling();
   void StartObjectProfiling();
@@ -938,9 +940,6 @@ class Runtime {
 
   // Whether zygote code is in a section that should not start threads.
   bool zygote_no_threads_;
-
-  bool enableRWProfiling = false;
-  bool enableHeapSizeProfiling = false;
 
 
   // Saved environment.
