@@ -2495,17 +2495,13 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
   Thread* self = Thread::Current();
   Runtime* runtime = Runtime::Current();
 
-  LOG(INFO) << "[HT] [GC] [Start]"
-            // << " ts=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
-            << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
-            << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
-            << ", gc_cause=" << gc_cause
-            << ", heap_obj_allocated=" << GetObjectsAllocated()
-            << ", heap_bytes_allocated=" << GetBytesAllocated()
-            << ", heap_obj_allocated_ever=" << GetObjectsAllocatedEver()
-            << ", heap_obj_freed_ever=" << GetObjectsFreedEver()
-            << ", heap_bytes_allocated_ever=" << GetBytesAllocatedEver()
-            << ", heap_bytes_freed_ever=" << GetBytesFreedEver();
+  PROFILE_LOG("GC start: gc_cause=" << gc_cause
+              << ", heap_obj_allocated=" << GetObjectsAllocated()
+              << ", heap_bytes_allocated=" << GetBytesAllocated()
+              << ", heap_obj_allocated_ever=" << GetObjectsAllocatedEver()
+              << ", heap_obj_freed_ever=" << GetObjectsFreedEver()
+              << ", heap_bytes_allocated_ever=" << GetBytesAllocatedEver()
+              << ", heap_bytes_freed_ever=" << GetBytesFreedEver());
 
   // If the heap can't run the GC, silently fail and return that no GC was run.
   switch (gc_type) {
@@ -2632,11 +2628,7 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
   LogGC(gc_cause, collector);
   FinishGC(self, gc_type);
 
-  LOG(INFO) << "[HT] [GC] [End]"
-            << " ts=" << std::chrono::seconds(std::time(nullptr)).count()
-            << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
-            << ", gc_cause=" << gc_cause
-            << ", gc_name=" << collector->GetName()
+  PROFILE_LOG("GC end: gc_cause=" << gc_cause
             << ", heap_obj_allocated=" << GetObjectsAllocated()
             << ", heap_bytes_allocated=" << GetBytesAllocated()
             << ", heap_obj_allocated_ever=" << GetObjectsAllocatedEver()
@@ -2646,7 +2638,7 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
             << ", gc_obj_freed=" << GetCurrentGcIteration()->GetFreedObjects()
             << ", gc_bytes_freed=" << GetCurrentGcIteration()->GetFreedBytes()
             << ", gc_large_obj_freed=" << GetCurrentGcIteration()->GetFreedLargeObjects()
-            << ", gc_large_bytes_freed=" << GetCurrentGcIteration()->GetFreedLargeObjectBytes();
+            << ", gc_large_bytes_freed=" << GetCurrentGcIteration()->GetFreedLargeObjectBytes());
 
   // Inform DDMS that a GC completed.
   Dbg::GcDidFinish();
