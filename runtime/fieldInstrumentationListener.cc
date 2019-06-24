@@ -5,12 +5,6 @@
 
 namespace art {
 
-#ifdef ART_TARGET_ANDROID
-static const char* kLogPrefix = "/data/misc/trace";
-#else
-static const char* kLogPrefix = "/tmp";
-#endif
-
 void FieldInstrumentationListener::FieldRead(Thread* thread, Handle<mirror::Object> this_object,
                                              ArtMethod* method, uint32_t dex_pc, ArtField* field) {
   FieldRead_(this_object.Get(), field);
@@ -55,13 +49,13 @@ void FieldInstrumentationListener::LogObjectAllocation(art::mirror::Object* obj,
 }
 
 
-void FieldInstrumentationListener::OpenPerfLog() {
+void FieldInstrumentationListener::OpenPerfLog(std::string& folder) {
   std::string pid_str = std::to_string(getpid());
   time_t n = time(nullptr);
   struct tm* local = localtime(&n);
   char strTime[80];
   strftime(strTime, 80, "%Y-%m-%d %H-%M-%S", local);
-  std::string perf_filename = std::string(kLogPrefix) + "/nvm-" + strTime + "-" + pid_str + ".log";
+  std::string perf_filename = folder + "/nvm-" + strTime + "-" + pid_str + ".log";
 
   if(log.is_open()) {
     log.close();

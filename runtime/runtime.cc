@@ -855,12 +855,17 @@ void Runtime::InitNonZygoteOrPostFork(JNIEnv* env, bool is_system_server, Native
   self->enableRWProfiling = this->enableRWProfiling;
   self->enableHeapSizeProfiling = this->enableHeapSizeProfiling;
 
+  this->StopObjectProfiling();
   if (this->enableRWProfiling) {
     Locks::mutator_lock_->ExclusiveLock(self);
     instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                      instrumentation::Instrumentation::kFieldWritten);
     Locks::mutator_lock_->ExclusiveUnlock(self);
-    //this->fieldInstrumentationListener->OpenPerfLog();
+    this->StartObjectProfiling();
+    if (dataDir != nullptr) {
+      std::string dataDir_string(dataDir);
+      this->fieldInstrumentationListener->OpenPerfLog(dataDir_string);
+    }
   }
 
 
