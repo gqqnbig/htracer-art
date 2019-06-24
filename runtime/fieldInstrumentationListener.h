@@ -118,7 +118,7 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
 
   void LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc) REQUIRES_SHARED(Locks::mutator_lock_);
 
-  void OpenPerfLog();
+  void OpenPerfLog(std::string& folder);
 
   void ClosePerfLog();
 
