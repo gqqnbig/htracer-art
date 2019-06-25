@@ -938,8 +938,6 @@ class Runtime {
   // Whether zygote code is in a section that should not start threads.
   bool zygote_no_threads_;
 
-  bool enableRWProfiling = false;
-  bool enableHeapSizeProfiling = false;
 
 
   // Saved environment.
@@ -971,9 +969,11 @@ class Runtime {
 
   DISALLOW_COPY_AND_ASSIGN(Runtime);
 
+
  public:
   FieldInstrumentationListener* fieldInstrumentationListener = new FieldInstrumentationListener();
-
+  bool enableRWProfiling = false;
+  bool enableHeapSizeProfiling = false;
 };
 
 }  // namespace art
