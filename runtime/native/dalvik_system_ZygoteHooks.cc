@@ -218,9 +218,9 @@ static void EnableDebugFeatures(uint32_t debug_flags) {
     debug_flags &= ~DEBUG_ALWAYS_JIT;
   }
 
-  runtime->StopObjectProfiling();
+  runtime->enableRWProfiling= false;
   if ((debug_flags & DEBUG_ENABLE_PROFILING) != 0) {
-    runtime->StartObjectProfiling();
+    runtime->enableRWProfiling=true;
     debug_flags &= ~DEBUG_ENABLE_PROFILING;
   }
 
