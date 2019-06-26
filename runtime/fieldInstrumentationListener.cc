@@ -41,9 +41,8 @@ void FieldInstrumentationListener::LogObjectAllocation(art::mirror::Object* obj,
 
   const char* fileName = method->GetDeclaringClassSourceFile();
 
-  log << strTime << " Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated at "
-      << method->PrettyMethod(false) << "(" << (fileName == nullptr ? "NO SOURCE FILE" : fileName) << ":" << method->GetLineNumFromDexPC(dex_pc) << ")"
-      << std::endl;
+  PROFILE_LOG(" Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated at "
+      << method->PrettyMethod(false) << "(" << (fileName == nullptr ? "NO SOURCE FILE" : fileName) << ":" << method->GetLineNumFromDexPC(dex_pc) << ")");
 }
 
 
