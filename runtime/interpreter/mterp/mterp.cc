@@ -403,7 +403,8 @@ extern "C" size_t MterpNewInstance(ShadowFrame* shadow_frame, Thread* self, uint
     return false;
   }
 
-  Runtime::Current()->fieldInstrumentationListener->LogObjectAllocation(obj,shadow_frame->GetMethod(),*shadow_frame->GetDexPCPtr());
+  if (Runtime::Current()->enableRWProfiling)
+    Runtime::Current()->fieldInstrumentationListener->LogObjectAllocation(obj, shadow_frame->GetMethod(), *shadow_frame->GetDexPCPtr());
 
   obj->GetClass()->AssertInitializedOrInitializingInThread(self);
   shadow_frame->SetVRegReference(inst->VRegA_21c(inst_data), obj);
