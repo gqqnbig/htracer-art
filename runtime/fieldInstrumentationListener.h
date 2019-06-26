@@ -8,7 +8,19 @@
 
 namespace art {
 
-#define PROFILE_LOG(x) LOG(INFO) << "[PROFILE_LOG] " << x
+#define PROFILE_LOG2(l, x) \
+ {time_t n= time(nullptr); \
+ struct tm *local=localtime(&n); \
+ char buf[80]; \
+ strftime(buf,80,"%Y-%m-%d %H:%M:%S ",local); \
+ l->log << buf << x << std::endl;}
+
+#define PROFILE_LOG1(x) PROFILE_LOG2(Runtime::Current()->fieldInstrumentationListener, x)
+
+#define GET_MACRO(_1,_2,NAME,...) NAME
+
+//ProfileLog(*fieldInstrumentationListener, << statements)
+#define PROFILE_LOG(...) GET_MACRO(__VA_ARGS__, PROFILE_LOG2, PROFILE_LOG1)(__VA_ARGS__)
 
 
 //use public inheritance, that doesn't change accessors of members of the super class.
