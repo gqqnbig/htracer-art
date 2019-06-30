@@ -108,8 +108,8 @@ class GarbageCollector : public RootVisitor, public IsMarkedVisitor, public Mark
   void RecordFreeLOS(const ObjectBytePair& freed);
   virtual void DumpPerformanceInfo(std::ostream& os) REQUIRES(!pause_histogram_lock_);
 
-  // Helper functions for querying if objects are marked. These are used for processing references,
-  // and will be used for reading system weaks while the GC is running.
+  // Helper functions for querying if objects are marked. If the object is not marked, return null.
+  // These are used for processing references, and will be used for reading system weaks while the GC is running.
   virtual mirror::Object* IsMarked(mirror::Object* obj)
       REQUIRES_SHARED(Locks::mutator_lock_) = 0;
   // Returns true if the given heap reference is null or is already marked. If it's already marked,

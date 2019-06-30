@@ -71,6 +71,7 @@ ALWAYS_INLINE inline static bool VerifyFieldAccess(Thread* self,
   return true;
 }
 
+//return value means if the access is successful.
 template<bool kAllowReferences>
 ALWAYS_INLINE inline static bool GetFieldValue(ObjPtr<mirror::Object> o,
                                                ObjPtr<mirror::Field> f,
