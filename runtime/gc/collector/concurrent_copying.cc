@@ -2694,6 +2694,21 @@ void ConcurrentCopying::DumpPerformanceInfo(std::ostream& os) {
   os << "Cumulative objects moved " << cumulative_objects_moved_.LoadRelaxed() << "\n";
 }
 
+
+void ConcurrentCopying::LogObjectCounts(mirror::Object* ref, const char* tag) {
+  if (ref->readCount_ > 0 || ref->writeCount_ > 0) {
+    //DCHECK_NE(ref->GetLockWord(false).GetState(), LockWord::LockState::kForwardingAddress)
+    //    << "If an object is ForwardingAddress, its read write count should be cleared to 0 in ConcurrentCopying::Copy.";
+    int32_t hash = ref->IdentityHashCode();
+    PROFILE_LOG(tag << " hash=" << hash
+                        << ",type=" << ref->PrettyTypeOf()
+                        << ",read=" << ref->readCount_ << ",write=" << ref->writeCount_);
+
+    //if (ref->readCount_ + ref->writeCount_ < 100)
+    //  PROFILE_LOG("Object " << hash << " can be moved to NVM.");
+  }
+}
+
 }  // namespace collector
 }  // namespace gc
 }  // namespace art

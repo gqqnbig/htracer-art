@@ -263,6 +263,8 @@ class ConcurrentCopying : public GarbageCollector {
   // Set the read barrier mark entrypoints to non-null.
   void ActivateReadBarrierEntrypoints();
 
+  void LogObjectCounts(mirror::Object* ref, const char* tag) REQUIRES_SHARED(Locks::mutator_lock_);
+
   space::RegionSpace* region_space_;      // The underlying region space.
   std::unique_ptr<Barrier> gc_barrier_;
   std::unique_ptr<accounting::ObjectStack> gc_mark_stack_;
