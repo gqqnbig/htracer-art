@@ -58,6 +58,7 @@ inline mirror::Object* ConcurrentCopying::MarkUnevacFromSpaceRegion(
   }
   if (success) {
     // Newly marked.
+    LogObjectCounts(ref, "MarkUnevacFromSpaceRegion");
     if (kUseBakerReadBarrier) {
       DCHECK_EQ(ref->GetReadBarrierState(), ReadBarrier::GrayState());
     }
@@ -105,14 +106,6 @@ inline mirror::Object* ConcurrentCopying::Mark(mirror::Object* from_ref,
     return nullptr;
   }
 
-  if (from_ref->readCount_ > 0 || from_ref->writeCount_ > 0) {
-    DCHECK_NE(from_ref->GetLockWord(false).GetState(), LockWord::LockState::kForwardingAddress)
-        << "If an object is ForwardingAddress, its read write count should be cleared to 0 in ConcurrentCopying::Copy.";
-    PROFILE_LOG("hash=" << from_ref->IdentityHashCode()
-                << ",type=" << from_ref->PrettyTypeOf()
-                << ",read=" << from_ref->readCount_ << ",write=" << from_ref->writeCount_);
-  }
-
   DCHECK(heap_->collector_type_ == kCollectorTypeCC);
   if (kFromGCThread) {
     DCHECK(is_active_);
@@ -142,6 +135,8 @@ inline mirror::Object* ConcurrentCopying::Mark(mirror::Object* from_ref,
       if (to_ref == nullptr) {
         // It isn't marked yet. Mark it by copying it to the to-space.
         to_ref = Copy(from_ref, holder, offset);
+
+        LogObjectCounts(from_ref, "kRegionTypeFromSpace");
       }
       DCHECK(region_space_->IsInToSpace(to_ref) || heap_->non_moving_space_->HasAddress(to_ref))
           << "from_ref=" << from_ref << " to_ref=" << to_ref;
@@ -151,6 +146,7 @@ inline mirror::Object* ConcurrentCopying::Mark(mirror::Object* from_ref,
       return MarkUnevacFromSpaceRegion(from_ref, region_space_bitmap_);
     }
     case space::RegionSpace::RegionType::kRegionTypeNone:
+      LogObjectCounts(from_ref, "kRegionTypeNone");
       if (immune_spaces_.ContainsObject(from_ref)) {
         return MarkImmuneSpace<kGrayImmuneObject>(from_ref);
       } else {

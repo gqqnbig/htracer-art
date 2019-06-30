@@ -2239,6 +2239,9 @@ mirror::Object* ConcurrentCopying::AllocateInSkippedBlock(size_t alloc_size) {
   return reinterpret_cast<mirror::Object*>(addr);
 }
 
+  template<int number>
+    struct PrintStaticValue{ operator char() { return number + 256; } };
+
 mirror::Object* ConcurrentCopying::Copy(mirror::Object* from_ref,
                                         mirror::Object* holder,
                                         MemberOffset offset) {
