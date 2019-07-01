@@ -270,6 +270,8 @@ static inline JValue Execute(
         if (jit->CanInvokeCompiledCode(method)) {
           JValue result;
 
+          DCHECK(Runtime::Current()->enableRWProfiling == false) << "JIT is not instrumented for RW profiling!";
+
           // Pop the shadow frame before calling into compiled code.
           self->PopShadowFrame();
           // Calculate the offset of the first input reg. The input registers are in the high regs.
@@ -313,6 +315,7 @@ static inline JValue Execute(
           }
           bool returned = ExecuteMterpImpl(self, code_item, &shadow_frame, &result_register);
           if (returned) {
+            DCHECK(Runtime::Current()->enableRWProfiling == false) << "Mterp doesn't support RWProfiling!";
             return result_register;
           } else {
             // Mterp didn't like that instruction.  Single-step it with the reference interpreter.
