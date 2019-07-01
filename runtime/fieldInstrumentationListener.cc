@@ -79,4 +79,19 @@ void FieldInstrumentationListener::ClosePerfLog() {
     log.close();
   }
 }
+
+void FieldInstrumentationListener::MethodEntered(Thread* thread,
+                     Handle<mirror::Object> this_object,
+                     ArtMethod* method,
+                     uint32_t dex_pc) {
+  PROFILE_LOG("Enter method " << method->PrettyMethod(false));
+}
+
+void FieldInstrumentationListener::MethodExited(Thread* thread,
+                    Handle<mirror::Object> this_object,
+                    ArtMethod* method,
+                    uint32_t dex_pc,
+                    const JValue& return_value) {
+  PROFILE_LOG("Exit method " << method->PrettyMethod(false));
+}
 }
