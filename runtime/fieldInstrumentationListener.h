@@ -40,7 +40,7 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
                      Handle<mirror::Object> this_object,
                      ArtMethod* method,
                      uint32_t dex_pc)
-  override REQUIRES_SHARED(Locks::mutator_lock_) {}
+  override REQUIRES_SHARED(Locks::mutator_lock_);
 
 //  void MethodExited(Thread* thread,
 //                    Handle<mirror::Object> this_object,
@@ -57,7 +57,7 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
                     ArtMethod* method,
                     uint32_t dex_pc,
                     const JValue& return_value)
-  override REQUIRES_SHARED(Locks::mutator_lock_) {}
+  override REQUIRES_SHARED(Locks::mutator_lock_);
 
   // Call-back for when a method is popped due to an exception throw. A method will either cause a
   // MethodExited call-back or a MethodUnwind call-back when its activation is removed.
