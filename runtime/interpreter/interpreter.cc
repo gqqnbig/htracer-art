@@ -269,6 +269,9 @@ static inline JValue Execute(
         jit->MethodEntered(self, shadow_frame.GetMethod());
         if (jit->CanInvokeCompiledCode(method)) {
           JValue result;
+          //Cannot use CHECK or DCHECK. If the check fails, the program may exit abruptly, without outputting error messages.
+          if(Runtime::Current()->enableRWProfiling != false)
+            LOG(WARNING) << "JIT is not instrumented for RWProfiling!";
 
           // Pop the shadow frame before calling into compiled code.
           self->PopShadowFrame();
@@ -313,6 +316,8 @@ static inline JValue Execute(
           }
           bool returned = ExecuteMterpImpl(self, code_item, &shadow_frame, &result_register);
           if (returned) {
+            if(Runtime::Current()->enableRWProfiling != false)
+              LOG(WARNING) << "Mterp is not instrumented for RWProfiling!";
             return result_register;
           } else {
             // Mterp didn't like that instruction.  Single-step it with the reference interpreter.
