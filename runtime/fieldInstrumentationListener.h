@@ -109,6 +109,10 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
 
   void ClosePerfLog();
 
+  void FieldRead_(mirror::Object* this_object, ArtField* field, const char* tag = "") REQUIRES_SHARED(Locks::mutator_lock_);
+
+  void FieldWritten_(mirror::Object* this_object, ArtField* field, const JValue& field_value, const char* tag = "") REQUIRES_SHARED(Locks::mutator_lock_);
+
   std::ofstream log;
 };
 }

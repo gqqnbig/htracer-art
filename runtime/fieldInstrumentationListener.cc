@@ -13,22 +13,31 @@ static const char* kLogPrefix = "/tmp";
 
 void FieldInstrumentationListener::FieldRead(Thread* thread, Handle<mirror::Object> this_object,
                                              ArtMethod* method, uint32_t dex_pc, ArtField* field) {
+  FieldRead_(this_object.Get(), field);
+}
+
+void FieldInstrumentationListener::FieldRead_(mirror::Object* this_object, ArtField* field, const char* tag) {
   if (field->IsStatic()) {
-    DCHECK(this_object.IsNull()) << "Read a static field, but object is not null.";
+    DCHECK(this_object == nullptr) << "Read a static field, but object is not null.";
   } else {
-    DCHECK(this_object.IsNull() == false);
-    this_object.Get()->readCount_++;
+    DCHECK(this_object != nullptr);
+    this_object->readCount_++;
   }
 }
 
 void FieldInstrumentationListener::FieldWritten(Thread* thread, Handle<mirror::Object> this_object,
                                                 ArtMethod* method, uint32_t dex_pc, ArtField* field,
                                                 const JValue& field_value) {
+  FieldWritten_(this_object.Get(), field, field_value);
+}
+
+void FieldInstrumentationListener::FieldWritten_(mirror::Object* this_object, ArtField* field,
+                                                 const JValue& field_value, const char* tag) {
   if (field->IsStatic()) {
-    DCHECK(this_object.IsNull()) << "Write a static field, but object is not null.";
+    DCHECK(this_object == nullptr) << "Write a static field, but object is not null.";
   } else {
-    DCHECK(this_object.IsNull() == false);
-    this_object.Get()->writeCount_++;
+    DCHECK(this_object != nullptr);
+    this_object->writeCount_++;
   }
 }
 
