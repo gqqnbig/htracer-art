@@ -47,7 +47,7 @@ REQUIRES_SHARED(Locks::mutator_lock_)
 //            << ", ts=" << std::chrono::seconds(std::time(nullptr)).count()
 //            << ", tshres=" << std::chrono::high_resolution_clock::now().time_since_epoch().count()
 //            << ", method=" << sf.GetMethod()->GetName()
-//            << ", field=" << f->GetName()
+//            << ", field=" << f->PrettyField(false)
 //            << ", iget=" << t->GetIGetPtr()
 //            << ", iput=" << t->GetIPutPtr()
 //            << ", obj_alloc=" << t->GetObjAllocatedPtr();
