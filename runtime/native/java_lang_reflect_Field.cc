@@ -81,6 +81,11 @@ ALWAYS_INLINE inline static bool GetFieldValue(ObjPtr<mirror::Object> o,
   DCHECK_EQ(value->GetJ(), INT64_C(0));
   MemberOffset offset(f->GetOffset());
   const bool is_volatile = f->IsVolatile();
+
+  if (Runtime::Current()->enableRWProfiling) {
+    Runtime::Current()->fieldInstrumentationListener->FieldRead_(o.Ptr(), f->GetArtField(), "reflect GetFieldValue");
+  }
+
   switch (field_type) {
     case Primitive::kPrimBoolean:
       value->SetZ(is_volatile ? o->GetFieldBooleanVolatile(offset) : o->GetFieldBoolean(offset));
@@ -258,6 +263,10 @@ ALWAYS_INLINE inline static void SetFieldValue(ObjPtr<mirror::Object> o,
   DCHECK(f->GetDeclaringClass()->IsInitialized());
   MemberOffset offset(f->GetOffset());
   const bool is_volatile = f->IsVolatile();
+
+  if (Runtime::Current()->enableRWProfiling)
+    Runtime::Current()->fieldInstrumentationListener->FieldWritten_(o.Ptr(), f->GetArtField(), new_value, "reflect SetFieldValue");
+
   switch (field_type) {
   case Primitive::kPrimBoolean:
     if (is_volatile) {
