@@ -856,7 +856,7 @@ void Runtime::InitNonZygoteOrPostFork(
     instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                      instrumentation::Instrumentation::kFieldWritten);
     Locks::mutator_lock_->ExclusiveUnlock(self);
-    this->fieldInstrumentationListener->OpenPerfLog();
+    //this->fieldInstrumentationListener->OpenPerfLog();
   }
 
 
@@ -893,7 +893,7 @@ void Runtime::StartObjectProfiling() {
   instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                    instrumentation::Instrumentation::kFieldWritten);
   Locks::mutator_lock_->ExclusiveUnlock(self);
-  this->fieldInstrumentationListener->OpenPerfLog();
+  //this->fieldInstrumentationListener->OpenPerfLog();
 }
 
 void Runtime::StartSignalCatcher() {
