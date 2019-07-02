@@ -1263,11 +1263,6 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
       }
       case Instruction::IGET: {
         PREAMBLE();
-
-
-        if(self->enableRWProfiling)
-          LOG(INFO) << "Instruction::IGET";
-
         bool success = DoFieldGet<InstancePrimitiveRead, Primitive::kPrimInt, do_access_check>(
             self, shadow_frame, inst, inst_data);
         POSSIBLY_HANDLE_PENDING_EXCEPTION(!success, Next_2xx);
