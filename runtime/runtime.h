@@ -938,7 +938,6 @@ class Runtime {
   // Whether zygote code is in a section that should not start threads.
   bool zygote_no_threads_;
 
-  FieldInstrumentationListener* fieldInstrumentationListener = new FieldInstrumentationListener();
   bool enableRWProfiling = false;
   bool enableHeapSizeProfiling = false;
 
@@ -971,6 +970,10 @@ class Runtime {
   uint64_t bytes_allocated = 0;
 
   DISALLOW_COPY_AND_ASSIGN(Runtime);
+
+ public:
+  FieldInstrumentationListener* fieldInstrumentationListener = new FieldInstrumentationListener();
+
 };
 
 }  // namespace art
