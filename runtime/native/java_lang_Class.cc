@@ -703,6 +703,10 @@ static jobject Class_newInstance(JNIEnv* env, jobject javaThis) {
                                    klass->PrettyClass().c_str());
     return nullptr;
   }
+  if(Runtime::Current()->enableRWProfiling) {
+    PROFILE_LOG("Allocate object from JNI " << klass->PrettyTypeOf());
+  }
+
   // Invoke the string allocator to return an empty string for the string class.
   if (klass->IsStringClass()) {
     gc::AllocatorType allocator_type = Runtime::Current()->GetHeap()->GetCurrentAllocator();
