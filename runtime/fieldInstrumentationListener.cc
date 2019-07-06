@@ -56,15 +56,6 @@ void FieldInstrumentationListener::FieldWritten_(mirror::Object* this_object, Ar
 
 void FieldInstrumentationListener::LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc) {
 
-  time_t n = time(nullptr);
-  struct tm* local = localtime(&n);
-  char strTime[80];
-  strftime(strTime, 80, "%Y-%m-%d %H:%M:%S", local);
-
-  const char* fileName = method->GetDeclaringClassSourceFile();
-
-  PROFILE_LOG(" Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated at "
-      << method->PrettyMethod(false) << "(" << (fileName == nullptr ? "NO SOURCE FILE" : fileName) << ":" << method->GetLineNumFromDexPC(dex_pc) << ")");
 }
 
 
