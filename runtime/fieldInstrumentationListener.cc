@@ -11,6 +11,10 @@ static const char* kLogPrefix = "/data/misc/trace";
 static const char* kLogPrefix = "/tmp";
 #endif
 
+//If an app runs in full interpreter mode, enable verbose mode will output too many logs
+//that overflow adb logcat.
+static constexpr bool kVerboseMode = false;
+
 void FieldInstrumentationListener::FieldRead(Thread* thread, Handle<mirror::Object> this_object,
                                              ArtMethod* method, uint32_t dex_pc, ArtField* field) {
   FieldRead_(this_object.Get(), field);
