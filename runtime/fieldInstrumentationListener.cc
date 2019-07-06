@@ -11,6 +11,10 @@ static const char* kLogPrefix = "/data/misc/trace";
 static const char* kLogPrefix = "/tmp";
 #endif
 
+//If an app runs in full interpreter mode, enable verbose mode will output too many logs
+//that overflow adb logcat.
+static constexpr bool kVerboseMode = false;
+
 void FieldInstrumentationListener::FieldRead(Thread* thread, Handle<mirror::Object> this_object,
                                              ArtMethod* method, uint32_t dex_pc, ArtField* field) {
   FieldRead_(this_object.Get(), field);
@@ -22,11 +26,13 @@ void FieldInstrumentationListener::FieldRead_(mirror::Object* this_object, ArtFi
   } else {
     DCHECK(this_object != nullptr);
     this_object->readCount_++;
-    LOG(INFO) << "FieldInstrumentationListener read: object=" << this_object->IdentityHashCode()
-              << ", field=" << field->PrettyField(true)
-              << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
-              << (tag[0] == '\0' ? "" : " (" + std::string(tag) + ")");
-
+    auto description=field->PrettyField(true);
+    if (kVerboseMode || description.find("QQ") != std::string::npos) {
+      LOG(INFO) << "FieldInstrumentationListener read: object=" << this_object->IdentityHashCode()
+                << ", field=" << field->PrettyField(true)
+                << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
+                << (tag[0] == '\0' ? "" : " (" + std::string(tag) + ")");
+    }
   }
 }
 
@@ -43,24 +49,27 @@ void FieldInstrumentationListener::FieldWritten_(mirror::Object* this_object, Ar
   } else {
     DCHECK(this_object != nullptr);
     this_object->writeCount_++;
-    LOG(INFO) << "FieldInstrumentationListener write: object=" << this_object->IdentityHashCode()
-              << ", field=" << field->PrettyField(true)
-              << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
-              << (tag[0] == '\0' ? "" : "(" + std::string(tag) + ")");
+    auto description=field->PrettyField(true);
+    if (kVerboseMode || description.find("QQ") != std::string::npos) {
+      LOG(INFO) << "FieldInstrumentationListener write: object=" << this_object->IdentityHashCode()
+                << ", field=" << field->PrettyField(true)
+                << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
+                << (tag[0] == '\0' ? "" : "(" + std::string(tag) + ")");
+    }
   }
 }
 
 void FieldInstrumentationListener::LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc) {
 
-  time_t n = time(nullptr);
-  struct tm* local = localtime(&n);
-  char strTime[80];
-  strftime(strTime, 80, "%Y-%m-%d %H:%M:%S", local);
-
-  const char* fileName = method->GetDeclaringClassSourceFile();
-
-  PROFILE_LOG(" Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated at "
-      << method->PrettyMethod(false) << "(" << (fileName == nullptr ? "NO SOURCE FILE" : fileName) << ":" << method->GetLineNumFromDexPC(dex_pc) << ")");
+//  time_t n = time(nullptr);
+//  struct tm* local = localtime(&n);
+//  char strTime[80];
+//  strftime(strTime, 80, "%Y-%m-%d %H:%M:%S", local);
+//
+//  const char* fileName = method->GetDeclaringClassSourceFile();
+//
+//  PROFILE_LOG(" Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated at "
+//                         << method->PrettyMethod(false) << "(" << (fileName == nullptr ? "NO SOURCE FILE" : fileName) << ":" << method->GetLineNumFromDexPC(dex_pc) << ")");
 }
 
 
