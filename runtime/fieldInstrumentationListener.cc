@@ -26,11 +26,6 @@ void FieldInstrumentationListener::FieldRead_(mirror::Object* this_object, ArtFi
   } else {
     DCHECK(this_object != nullptr);
     this_object->readCount_++;
-    LOG(INFO) << "FieldInstrumentationListener read: object=" << this_object->IdentityHashCode()
-              << ", field=" << field->PrettyField(true)
-              << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
-              << (tag[0] == '\0' ? "" : " (" + std::string(tag) + ")");
-
   }
 }
 
