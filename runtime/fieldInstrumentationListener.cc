@@ -1,7 +1,12 @@
+#include <android-base/logging.h>
 #include "fieldInstrumentationListener.h"
 
 #include "mirror/object.h"
 #include "art_method-inl.h"
+
+
+//#include "art_field-inl.h"
+
 
 namespace art {
 
@@ -20,21 +25,30 @@ void FieldInstrumentationListener::FieldRead(Thread* thread, Handle<mirror::Obje
   FieldRead_(this_object.Get(), field);
 }
 
+
+void WriteLog(const char* action, mirror::Object* this_object, ArtField* field, const char* tag) REQUIRES_SHARED(Locks::mutator_lock_) {
+  LOG(INFO) << "FieldInstrumentationListener " << action << ": object=" << this_object->IdentityHashCode()
+            << ", field=" << field->PrettyField(true)
+            << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
+            << (tag[0] == '\0' ? "" : " (" + std::string(tag) + ")");
+}
+
 void FieldInstrumentationListener::FieldRead_(mirror::Object* this_object, ArtField* field, const char* tag) {
   if (field->IsStatic()) {
     DCHECK(this_object == nullptr) << "Read a static field, but object is not null.";
   } else {
     DCHECK(this_object != nullptr);
     this_object->readCount_++;
-    auto description=field->PrettyField(true);
-    if (kVerboseMode || description.find("QQ") != std::string::npos) {
-      LOG(INFO) << "FieldInstrumentationListener read: object=" << this_object->IdentityHashCode()
-                << ", field=" << field->PrettyField(true)
-                << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
-                << (tag[0] == '\0' ? "" : " (" + std::string(tag) + ")");
-    }
+
+    std::string temp;
+    auto description=field->GetDeclaringClass();//->GetDescriptor(&temp);
+    LOG(INFO) << SHOW_VALUE(description) << ", " << SHOW_VALUE(temp);
+//    if (kVerboseMode || description.find("QQ") != std::string::npos) {
+//      WriteLog("read", this_object, field, tag);
+//    }
   }
 }
+
 
 void FieldInstrumentationListener::FieldWritten(Thread* thread, Handle<mirror::Object> this_object,
                                                 ArtMethod* method, uint32_t dex_pc, ArtField* field,
@@ -49,13 +63,13 @@ void FieldInstrumentationListener::FieldWritten_(mirror::Object* this_object, Ar
   } else {
     DCHECK(this_object != nullptr);
     this_object->writeCount_++;
-    auto description=field->PrettyField(true);
-    if (kVerboseMode || description.find("QQ") != std::string::npos) {
-      LOG(INFO) << "FieldInstrumentationListener write: object=" << this_object->IdentityHashCode()
-                << ", field=" << field->PrettyField(true)
-                << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_
-                << (tag[0] == '\0' ? "" : "(" + std::string(tag) + ")");
-    }
+
+    std::string temp;
+    auto description=field->GetDeclaringClass()->GetDescriptor(&temp);
+    LOG(INFO) << SHOW_VALUE(description) << ", " << SHOW_VALUE(temp);
+//    if (kVerboseMode || description.find("QQ") != std::string::npos) {
+//      WriteLog("write", this_object, field, tag);
+//    }
   }
 }
 
