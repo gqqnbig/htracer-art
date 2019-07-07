@@ -177,9 +177,9 @@ JValue ExecuteSwitchImpl(Thread* self, const DexFile::CodeItem* code_item,
     TraceExecution(shadow_frame, inst, dex_pc);
     inst_data = inst->Fetch16(0);
 
-//    if(self->enableRWProfiling)
-//      LOG(INFO) << "See " << inst->Opcode(inst_data);
-
+//    if(self->enableRWProfiling) {
+//      LOG(INFO) << "See " << dex_pc << " " << inst->Opcode(inst_data) << " at " << method->PrettyMethod(false) << ":" << method->GetLineNumFromDexPC(dex_pc);
+//    }
 
     switch (inst->Opcode(inst_data)) {
       case Instruction::NOP:
