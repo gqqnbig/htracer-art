@@ -137,7 +137,7 @@ inline mirror::Object* ConcurrentCopying::Mark(mirror::Object* from_ref,
         // It isn't marked yet. Mark it by copying it to the to-space.
         to_ref = Copy(from_ref, holder, offset);
 
-        LogObjectCounts(from_ref, "kRegionTypeFromSpace");
+        LogObjectCounts(to_ref, "kRegionTypeFromSpace");
       }
       DCHECK(region_space_->IsInToSpace(to_ref) || heap_->non_moving_space_->HasAddress(to_ref))
           << "from_ref=" << from_ref << " to_ref=" << to_ref;
