@@ -90,6 +90,7 @@ inline mirror::Object* ConcurrentCopying::MarkImmuneSpace(mirror::Object* ref) {
     bool success = ref->AtomicSetReadBarrierState(ReadBarrier::WhiteState(),
                                                   ReadBarrier::GrayState());
     if (success) {
+      LogObjectCounts(ref, "MarkImmuneSpace");
       MutexLock mu(Thread::Current(), immune_gray_stack_lock_);
       immune_gray_stack_.push_back(ref);
     }
@@ -146,7 +147,6 @@ inline mirror::Object* ConcurrentCopying::Mark(mirror::Object* from_ref,
       return MarkUnevacFromSpaceRegion(from_ref, region_space_bitmap_);
     }
     case space::RegionSpace::RegionType::kRegionTypeNone:
-      LogObjectCounts(from_ref, "kRegionTypeNone");
       if (immune_spaces_.ContainsObject(from_ref)) {
         return MarkImmuneSpace<kGrayImmuneObject>(from_ref);
       } else {

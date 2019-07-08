@@ -2491,6 +2491,7 @@ mirror::Object* ConcurrentCopying::MarkNonMoving(mirror::Object* ref,
   accounting::LargeObjectBitmap* los_bitmap =
       heap_mark_bitmap_->GetLargeObjectBitmap(ref);
   bool is_los = mark_bitmap == nullptr;
+  LogObjectCounts(ref, "MarkNonMoving");
   if (!is_los && mark_bitmap->Test(ref)) {
     // Already marked.
     if (kUseBakerReadBarrier) {
