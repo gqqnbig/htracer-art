@@ -2491,7 +2491,6 @@ mirror::Object* ConcurrentCopying::MarkNonMoving(mirror::Object* ref,
   accounting::LargeObjectBitmap* los_bitmap =
       heap_mark_bitmap_->GetLargeObjectBitmap(ref);
   bool is_los = mark_bitmap == nullptr;
-  LogObjectCounts(ref, "MarkNonMoving");
   if (!is_los && mark_bitmap->Test(ref)) {
     // Already marked.
     if (kUseBakerReadBarrier) {
@@ -2509,6 +2508,7 @@ mirror::Object* ConcurrentCopying::MarkNonMoving(mirror::Object* ref,
     if (IsOnAllocStack(ref)) {
       // If it's on the allocation stack, it's considered marked. Keep it white.
       // Objects on the allocation stack need not be marked.
+      LogObjectCounts(ref, "MarkNonMoving-allocStack");
       if (!is_los) {
         DCHECK(!mark_bitmap->Test(ref));
       } else {
@@ -2556,6 +2556,7 @@ mirror::Object* ConcurrentCopying::MarkNonMoving(mirror::Object* ref,
         if (kUseBakerReadBarrier) {
           DCHECK_EQ(ref->GetReadBarrierState(), ReadBarrier::GrayState());
         }
+        LogObjectCounts(ref, "MarkNonMoving");
         PushOntoMarkStack(ref);
       }
     }
