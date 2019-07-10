@@ -13,6 +13,7 @@ namespace art {
  struct tm *local=localtime(&n); \
  char buf[80]; \
  strftime(buf,80,"%Y-%m-%d %H:%M:%S ",local); \
+ MutexLock mu(Thread::Current(),Runtime::Current()->fieldInstrumentationListener->logMutex);\
  l->log << buf << x << std::endl;}
 
 #define PROFILE_LOG1(x) PROFILE_LOG2(Runtime::Current()->fieldInstrumentationListener, x)
@@ -27,7 +28,10 @@ namespace art {
 class FieldInstrumentationListener final : public instrumentation::InstrumentationListener {
  public:
 
-  virtual ~FieldInstrumentationListener() {
+  FieldInstrumentationListener() : logMutex("FieldInstrumentationListener log lock") {
+  }
+
+  ~FieldInstrumentationListener() {
     ClosePerfLog();
   }
 
@@ -127,7 +131,7 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
 
   std::ofstream log;
 
-  std::mutex logMutex;
+  Mutex logMutex DEFAULT_MUTEX_ACQUIRED_AFTER;
 };
 }
 
