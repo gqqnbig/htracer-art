@@ -2495,6 +2495,7 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
   Thread* self = Thread::Current();
   Runtime* runtime = Runtime::Current();
 
+  //This method runs under thread HeapTaskDaemon.
   if(runtime->enableHeapSizeProfiling || runtime->enableRWProfiling)
     PROFILE_LOG("GC start: gc_cause=" << gc_cause
                 << ", heap_obj_allocated=" << GetObjectsAllocated()
