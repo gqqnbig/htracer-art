@@ -2496,14 +2496,23 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
   Runtime* runtime = Runtime::Current();
 
   //This method runs under thread HeapTaskDaemon.
-  if(runtime->enableHeapSizeProfiling || runtime->enableRWProfiling)
+  if (runtime->enableHeapSizeProfiling || runtime->enableRWProfiling) {
+    //PROFILE_LOG will perform a lock, while GetObjectsAllocated will suspend all other threads.
+    //They somehow cause a deadlock. Check case https://trello.com/c/5jDXDFD6.
+    size_t objectsAllocated = GetObjectsAllocated();
+    size_t bytesAllocated = GetBytesAllocated();
+    uint64_t objectsAllocatedEver = GetObjectsAllocatedEver();
+    uint64_t bytesAllocatedEver = GetBytesAllocatedEver();
+    uint64_t bytesFreedEver = GetBytesFreedEver();
+    uint64_t objectsFreedEver = GetObjectsFreedEver();
     PROFILE_LOG("GC start: gc_cause=" << gc_cause
-                << ", heap_obj_allocated=" << GetObjectsAllocated()
-                << ", heap_bytes_allocated=" << GetBytesAllocated()
-                << ", heap_obj_allocated_ever=" << GetObjectsAllocatedEver()
-                << ", heap_obj_freed_ever=" << GetObjectsFreedEver()
-                << ", heap_bytes_allocated_ever=" << GetBytesAllocatedEver()
-                << ", heap_bytes_freed_ever=" << GetBytesFreedEver());
+                                      << ", heap_obj_allocated=" << objectsAllocated
+                                      << ", heap_bytes_allocated=" << bytesAllocated
+                                      << ", heap_obj_allocated_ever=" << objectsAllocatedEver
+                                      << ", heap_obj_freed_ever=" << objectsFreedEver
+                                      << ", heap_bytes_allocated_ever=" << bytesAllocatedEver
+                                      << ", heap_bytes_freed_ever=" << bytesFreedEver);
+  }
 
   // If the heap can't run the GC, silently fail and return that no GC was run.
   switch (gc_type) {
@@ -2630,18 +2639,21 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
   LogGC(gc_cause, collector);
   FinishGC(self, gc_type);
 
-  if(runtime->enableHeapSizeProfiling || runtime->enableRWProfiling)
+  if (runtime->enableHeapSizeProfiling || runtime->enableRWProfiling) {
+    size_t objectsAllocated = GetObjectsAllocated();
+    size_t bytesAllocated = GetBytesAllocated();
+    uint64_t objectsAllocatedEver = GetObjectsAllocatedEver();
+    uint64_t bytesAllocatedEver = GetBytesAllocatedEver();
+    uint64_t bytesFreedEver = GetBytesFreedEver();
+    uint64_t objectsFreedEver = GetObjectsFreedEver();
     PROFILE_LOG("GC end: gc_cause=" << gc_cause
-                << ", heap_obj_allocated=" << GetObjectsAllocated()
-                << ", heap_bytes_allocated=" << GetBytesAllocated()
-                << ", heap_obj_allocated_ever=" << GetObjectsAllocatedEver()
-                << ", heap_obj_freed_ever=" << GetObjectsFreedEver()
-                << ", heap_bytes_allocated_ever=" << GetBytesAllocatedEver()
-                << ", heap_bytes_freed_ever=" << GetBytesFreedEver()
-                << ", gc_obj_freed=" << GetCurrentGcIteration()->GetFreedObjects()
-                << ", gc_bytes_freed=" << GetCurrentGcIteration()->GetFreedBytes()
-                << ", gc_large_obj_freed=" << GetCurrentGcIteration()->GetFreedLargeObjects()
-                << ", gc_large_bytes_freed=" << GetCurrentGcIteration()->GetFreedLargeObjectBytes());
+                                    << ", heap_obj_allocated=" << objectsAllocated
+                                    << ", heap_bytes_allocated=" << bytesAllocated
+                                    << ", heap_obj_allocated_ever=" << objectsAllocatedEver
+                                    << ", heap_obj_freed_ever=" << objectsFreedEver
+                                    << ", heap_bytes_allocated_ever=" << bytesAllocatedEver
+                                    << ", heap_bytes_freed_ever=" << bytesFreedEver);
+  }
 
   // Inform DDMS that a GC completed.
   Dbg::GcDidFinish();
