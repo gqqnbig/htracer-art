@@ -13,8 +13,15 @@ namespace art {
  struct tm *local=localtime(&n); \
  char buf[80]; \
  strftime(buf,80,"%Y-%m-%d %H:%M:%S ",local); \
- MutexLock mu(Thread::Current(),Runtime::Current()->fieldInstrumentationListener->logMutex);\
- l->log << buf << x << std::endl;}
+ int r=rand(); \
+ auto self__=Thread::Current();\
+ {\
+ MutexLock mu(self__, *Locks::logging_lock_); \
+ LOG(INFO) << "Enter " << __func__  << " logMutex " << r; \
+ l->log << buf << x << std::endl; \
+ LOG(INFO) << "Leave " << __func__  << " logMutex " << r; \
+ }\
+}
 
 #define PROFILE_LOG1(x) PROFILE_LOG2(Runtime::Current()->fieldInstrumentationListener, x)
 

@@ -167,6 +167,7 @@ void GarbageCollector::ResetMeasurements() {
 GarbageCollector::ScopedPause::ScopedPause(GarbageCollector* collector, bool with_reporting)
     : start_time_(NanoTime()), collector_(collector), with_reporting_(with_reporting) {
   Runtime* runtime = Runtime::Current();
+  LOG(INFO) << "ScopedPause";
   runtime->GetThreadList()->SuspendAll(__FUNCTION__);
   if (with_reporting) {
     GcPauseListener* pause_listener = runtime->GetHeap()->GetGcPauseListener();

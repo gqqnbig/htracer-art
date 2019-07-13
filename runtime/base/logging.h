@@ -51,7 +51,7 @@ struct LogVerbosity {
   bool simulator;
   bool startup;
   bool third_party_jni;  // Enabled with "-verbose:third-party-jni".
-  bool threads;
+  bool threads = true;
   bool verifier;
   bool image;
   bool systrace_lock_logging;  // Enabled with "-verbose:sys-locks".

@@ -181,6 +181,9 @@ void ConcurrentCopying::RunPhases() {
   // Verify no from space refs. This causes a pause.
   if (kEnableNoFromSpaceRefsVerification) {
     TimingLogger::ScopedTiming split("(Paused)VerifyNoFromSpaceReferences", GetTimings());
+    std::string tn;
+    self->GetThreadName(tn);
+    LOG(INFO) << "ConcurrentCopying::RunPhases thread=" << tn;
     ScopedPause pause(this, false);
     CheckEmptyMarkStack();
     if (kVerboseMode) {
@@ -2705,9 +2708,21 @@ void ConcurrentCopying::LogObjectCounts(mirror::Object* ref, const char* tag) {
     //DCHECK_NE(ref->GetLockWord(false).GetState(), LockWord::LockState::kForwardingAddress)
     //    << "If an object is ForwardingAddress, its read write count should be cleared to 0 in ConcurrentCopying::Copy.";
     int32_t hash = ref->IdentityHashCode();
-    PROFILE_LOG(tag << " hash=" << hash
-                        << ",type=" << ref->PrettyTypeOf()
-                        << ",read=" << ref->readCount_ << ",write=" << ref->writeCount_);
+
+    time_t n = time(nullptr);
+    struct tm* local = localtime(&n);
+    char buf[80];
+    strftime(buf, 80, "%Y-%m-%d %H:%M:%S ", local);
+
+    int r = rand();
+    auto self__ = Thread::Current();
+    Locks::logging_lock_->ExclusiveLock(self__);
+    LOG(INFO) << "LogObjectCounts: Enter logMutex " << r;
+    Runtime::Current()->fieldInstrumentationListener->log << buf << tag << " hash=" << hash
+                                                          << ",type=" << ref->PrettyTypeOf()
+                                                          << ",read=" << ref->readCount_ << ",write=" << ref->writeCount_ << std::endl;
+    LOG(INFO) << "LogObjectCounts: Leave logMutex " << r;
+    Locks::logging_lock_->ExclusiveUnlock(self__);
 
     //if (ref->readCount_ + ref->writeCount_ < 100)
     //  PROFILE_LOG("Object " << hash << " can be moved to NVM.");

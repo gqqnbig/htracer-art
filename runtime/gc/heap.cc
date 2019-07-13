@@ -1760,6 +1760,7 @@ void Heap::SetTargetHeapUtilization(float target) {
 }
 
 size_t Heap::GetObjectsAllocated() const {
+  LOG(INFO) << "enter GetObjectsAllocated";
   Thread* const self = Thread::Current();
   ScopedThreadStateChange tsc(self, kWaitingForGetObjectsAllocated);
   // Prevent GC running during GetObjectsALlocated since we may get a checkpoint request that tells
@@ -1774,6 +1775,7 @@ size_t Heap::GetObjectsAllocated() const {
   for (space::AllocSpace* space : alloc_spaces_) {
     total += space->GetObjectsAllocated();
   }
+  LOG(INFO) << "return GetObjectsAllocated";
   return total;
 }
 
@@ -1783,6 +1785,7 @@ uint64_t Heap::GetObjectsAllocatedEver() const {
   if (Thread::Current() != nullptr) {
     total += GetObjectsAllocated();
   }
+  LOG(INFO) << "return GetObjectsAllocatedEver";
   return total;
 }
 

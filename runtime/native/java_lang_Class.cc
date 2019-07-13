@@ -703,8 +703,18 @@ static jobject Class_newInstance(JNIEnv* env, jobject javaThis) {
                                    klass->PrettyClass().c_str());
     return nullptr;
   }
-  if(Runtime::Current()->enableRWProfiling) {
-    PROFILE_LOG("Allocate object from JNI " << klass->PrettyTypeOf());
+  if (Runtime::Current()->enableRWProfiling) {
+    time_t n = time(nullptr);
+    struct tm* local = localtime(&n);
+    char buf[80];
+    strftime(buf, 80, "%Y-%m-%d %H:%M:%S ", local);
+    int r = rand();
+    auto self__ = Thread::Current();
+    Locks::logging_lock_->ExclusiveLock(self__);
+    LOG(INFO) << "Class_newInstance: Enter logMutex " << r;
+    Runtime::Current()->fieldInstrumentationListener->log << buf << "Allocate object from JNI " << klass->PrettyTypeOf() << std::endl;
+    LOG(INFO) << "Class_newInstance: Leave logMutex " << r;
+    Locks::logging_lock_->ExclusiveUnlock(self__);
   }
 
   // Invoke the string allocator to return an empty string for the string class.

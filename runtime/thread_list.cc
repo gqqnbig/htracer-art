@@ -541,6 +541,7 @@ size_t ThreadList::FlipThreadRoots(Closure* thread_flip_visitor,
 
   collector->GetHeap()->ThreadFlipBegin(self);  // Sync with JNI critical calls.
 
+  LOG(INFO) << "ThreadList::FlipThreadRoots";
   // ThreadFlipBegin happens before we suspend all the threads, so it does not count towards the
   // pause.
   const uint64_t suspend_start_time = NanoTime();
@@ -628,6 +629,13 @@ size_t ThreadList::FlipThreadRoots(Closure* thread_flip_visitor,
 
 void ThreadList::SuspendAll(const char* cause, bool long_suspend) {
   Thread* self = Thread::Current();
+
+  std::string tn;
+  if (self != nullptr)
+    self->GetThreadName(tn);
+  else
+    tn = "null";
+  LOG(INFO) << "ThreadList::SuspendAll thread=" << tn;
 
   if (self != nullptr) {
     VLOG(threads) << *self << " SuspendAll for " << cause << " starting...";
@@ -738,7 +746,8 @@ void ThreadList::SuspendAllInternal(Thread* self,
         // Only clear the counter for the current thread.
         thread->ClearSuspendBarrier(&pending_threads);
         pending_threads.FetchAndSubSequentiallyConsistent(1);
-      }
+      } else
+        VLOG(threads) << "thread "<< *thread << " not suspended.";
     }
   }
 
@@ -1121,6 +1130,7 @@ void ThreadList::SuspendAllForDebugger() {
 
   VLOG(threads) << *self << " SuspendAllForDebugger starting...";
 
+  LOG(INFO) << "ThreadList::SuspendAllForDebugger";
   SuspendAllInternal(self, self, debug_thread, SuspendReason::kForDebugger);
   // Block on the mutator lock until all Runnable threads release their share of access then
   // immediately unlock again.
@@ -1556,6 +1566,7 @@ void ThreadList::ReleaseThreadId(Thread* self, uint32_t id) {
 }
 
 ScopedSuspendAll::ScopedSuspendAll(const char* cause, bool long_suspend) {
+  LOG(INFO) << "ScopedSuspendAll";
   Runtime::Current()->GetThreadList()->SuspendAll(cause, long_suspend);
 }
 

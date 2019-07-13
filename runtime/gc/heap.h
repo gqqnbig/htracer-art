@@ -486,7 +486,9 @@ class Heap {
 
   // Returns the number of bytes currently allocated.
   size_t GetBytesAllocated() const {
-    return num_bytes_allocated_.LoadSequentiallyConsistent();
+    auto res= num_bytes_allocated_.LoadSequentiallyConsistent();
+    LOG(INFO) << "return GetBytesAllocated";
+    return  res;
   }
 
   // Returns the number of objects currently allocated.
@@ -501,11 +503,13 @@ class Heap {
 
   // Returns the total number of objects freed since the heap was created.
   uint64_t GetObjectsFreedEver() const {
+    LOG(INFO) << "return GetObjectsFreedEver";
     return total_objects_freed_ever_;
   }
 
   // Returns the total number of bytes freed since the heap was created.
   uint64_t GetBytesFreedEver() const {
+    LOG(INFO) << "return GetBytesFreedEver";
     return total_bytes_freed_ever_;
   }
 
