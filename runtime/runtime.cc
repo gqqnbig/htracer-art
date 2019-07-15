@@ -904,7 +904,6 @@ void Runtime::StartObjectProfiling(Thread* self) {
   instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                    instrumentation::Instrumentation::kFieldWritten);
   Locks::mutator_lock_->ExclusiveUnlock(self);
-  //this->fieldInstrumentationListener->OpenPerfLog();
 }
 
 void Runtime::StartSignalCatcher() {
