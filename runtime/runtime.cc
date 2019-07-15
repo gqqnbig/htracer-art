@@ -855,13 +855,9 @@ void Runtime::InitNonZygoteOrPostFork(JNIEnv* env, bool is_system_server, Native
   self->enableRWProfiling = this->enableRWProfiling;
   self->enableHeapSizeProfiling = this->enableHeapSizeProfiling;
 
-  this->StopObjectProfiling();
+  this->StopObjectProfiling(self);
   if (this->enableRWProfiling) {
-    Locks::mutator_lock_->ExclusiveLock(self);
-    instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
-                                                                     instrumentation::Instrumentation::kFieldWritten);
-    Locks::mutator_lock_->ExclusiveUnlock(self);
-    this->StartObjectProfiling();
+    this->StartObjectProfiling(self);
     if (dataDir != nullptr) {
       std::string dataDir_string(dataDir);
       this->fieldInstrumentationListener->OpenPerfLog(dataDir_string);
@@ -887,8 +883,7 @@ void Runtime::InitNonZygoteOrPostFork(JNIEnv* env, bool is_system_server, Native
 }
 
 
-void Runtime::StopObjectProfiling() {
-  Thread* self = Thread::Current();
+void Runtime::StopObjectProfiling(Thread* self) {
   Locks::mutator_lock_->ExclusiveLock(self);
   instrumentation_.RemoveListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                       instrumentation::Instrumentation::kFieldWritten);
@@ -896,8 +891,7 @@ void Runtime::StopObjectProfiling() {
   this->fieldInstrumentationListener->ClosePerfLog();
 }
 
-void Runtime::StartObjectProfiling() {
-  Thread* self = Thread::Current();
+void Runtime::StartObjectProfiling(Thread* self) {
   Locks::mutator_lock_->ExclusiveLock(self);
   instrumentation_.AddListener(this->fieldInstrumentationListener, instrumentation::Instrumentation::kFieldRead |
                                                                    instrumentation::Instrumentation::kFieldWritten);

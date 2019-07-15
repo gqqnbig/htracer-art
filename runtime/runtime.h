@@ -685,8 +685,8 @@ class Runtime {
   void ObjAllocatedIncrement(uint64_t value = 1) { obj_allocated += value; }
   void BytesAllocatedIncrement(uint64_t value) { bytes_allocated += value; }
 
-  void StopObjectProfiling();
-  void StartObjectProfiling();
+  void StopObjectProfiling(Thread* self);
+  void StartObjectProfiling(Thread* self);
 
  private:
   static void InitPlatformSignalHandlers();
