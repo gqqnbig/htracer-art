@@ -439,6 +439,8 @@ class Runtime {
   bool UseJitCompilation() const;
 
   void PreZygoteFork();
+
+  //This method is called when runtime starts, or runtime is forked.
   void InitNonZygoteOrPostFork(
       JNIEnv* env, bool is_system_server, NativeBridgeAction action,
       //Instruction Set Architecture. It takes values like "arm64".
