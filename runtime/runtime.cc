@@ -782,10 +782,17 @@ bool Runtime::Start() {
     NativeBridgeAction action = force_native_bridge_
         ? NativeBridgeAction::kInitialize
         : NativeBridgeAction::kUnload;
+
+#ifdef ART_TARGET_ANDROID
+    static const char* dataDir = nullptr;
+#else
+    static const char* dataDir = "/tmp";
+#endif
+
     InitNonZygoteOrPostFork(self->GetJniEnv(),
                             /* is_system_server */ false,
                             action,
-                            GetInstructionSetString(kRuntimeISA), nullptr);
+                            GetInstructionSetString(kRuntimeISA), dataDir);
   }
 
   // Send the initialized phase event. Send it before starting daemons, as otherwise
