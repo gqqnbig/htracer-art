@@ -864,6 +864,7 @@ void Runtime::InitNonZygoteOrPostFork(JNIEnv* env, bool is_system_server, Native
 
   this->StopObjectProfiling(self);
   if (this->enableRWProfiling) {
+    GetInstrumentation()->ForceInterpretOnly();
     this->StartObjectProfiling(self);
     if (dataDir != nullptr) {
       std::string dataDir_string(dataDir);
