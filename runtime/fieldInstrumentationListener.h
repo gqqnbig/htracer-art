@@ -119,7 +119,10 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
                                 ArtMethod* callee)
   override REQUIRES_SHARED(Locks::mutator_lock_) {}
 
-  void LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc) REQUIRES_SHARED(Locks::mutator_lock_);
+  void LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc, const char* tag = "") REQUIRES_SHARED(Locks::mutator_lock_);
+
+  void LogObjectAllocation(art::mirror::Object* obj, const char* tag) REQUIRES_SHARED(Locks::mutator_lock_);
+
 
   void OpenPerfLog(std::string& folder);
 

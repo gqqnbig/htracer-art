@@ -49,11 +49,20 @@ void FieldInstrumentationListener::FieldWritten_(mirror::Object* this_object, Ar
   }
 }
 
-void FieldInstrumentationListener::LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc) {
+void FieldInstrumentationListener::LogObjectAllocation(art::mirror::Object* obj, art::ArtMethod* method, uint32_t dex_pc, const char* tag) {
+  CHECK(method != nullptr);
+
   const char* fileName = method->GetDeclaringClassSourceFile();
 
-  PROFILE_LOG(" Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated at "
-      << method->PrettyMethod(false) << "(" << (fileName == nullptr ? "NO SOURCE FILE" : fileName) << ":" << method->GetLineNumFromDexPC(dex_pc) << ")");
+  std::string ending = strcmp(tag, "") == 0 ? "" : std::string(" from ") + tag;
+  PROFILE_LOG("Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated at "
+                        << method->PrettyMethod(false) << "(" << (fileName == nullptr ? "NO SOURCE FILE" : fileName) << ":" << method->GetLineNumFromDexPC(dex_pc) << ")"
+                        << ending);
+}
+
+
+void FieldInstrumentationListener::LogObjectAllocation(art::mirror::Object* obj, const char* tag) {
+  PROFILE_LOG("Object " << obj->IdentityHashCode() << " (" << obj->GetClass()->PrettyDescriptor() << ") is allocated from " << tag);
 }
 
 

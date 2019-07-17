@@ -703,9 +703,6 @@ static jobject Class_newInstance(JNIEnv* env, jobject javaThis) {
                                    klass->PrettyClass().c_str());
     return nullptr;
   }
-  if(Runtime::Current()->enableRWProfiling) {
-    PROFILE_LOG("Allocate object from JNI " << klass->PrettyTypeOf());
-  }
 
   // Invoke the string allocator to return an empty string for the string class.
   if (klass->IsStringClass()) {
@@ -714,6 +711,8 @@ static jobject Class_newInstance(JNIEnv* env, jobject javaThis) {
     if (UNLIKELY(soa.Self()->IsExceptionPending())) {
       return nullptr;
     } else {
+      if (Runtime::Current()->enableRWProfiling)
+        Runtime::Current()->fieldInstrumentationListener->LogObjectAllocation(obj.Ptr(), "JNI");
       return soa.AddLocalReference<jobject>(obj);
     }
   }
@@ -753,6 +752,8 @@ static jobject Class_newInstance(JNIEnv* env, jobject javaThis) {
   if (UNLIKELY(soa.Self()->IsExceptionPending())) {
     return nullptr;
   }
+  if (Runtime::Current()->enableRWProfiling)
+    Runtime::Current()->fieldInstrumentationListener->LogObjectAllocation(receiver.Get(), "JNI");
   // Constructors are ()V methods, so we shouldn't touch the result of InvokeMethod.
   return soa.AddLocalReference<jobject>(receiver.Get());
 }
