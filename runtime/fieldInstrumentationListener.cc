@@ -71,7 +71,7 @@ void FieldInstrumentationListener::OpenPerfLog(std::string& folder) {
   time_t n = time(nullptr);
   struct tm* local = localtime(&n);
   char strTime[80];
-  strftime(strTime, 80, "%Y-%m-%d %H-%M-%S", local);
+  strftime(strTime, 80, "%H-%M-%S", local);
   std::string perf_filename = folder + "/nvm-" + strTime + "-" + pid_str + ".log";
 
   if(log.is_open()) {

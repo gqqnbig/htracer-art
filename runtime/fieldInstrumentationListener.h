@@ -11,8 +11,8 @@ namespace art {
 #define PROFILE_LOG2(l, x) \
  {time_t n= time(nullptr); \
  struct tm *local=localtime(&n); \
- char buf[80]; \
- strftime(buf,80,"%Y-%m-%d %H:%M:%S ",local); \
+ char buf[40]; \
+ strftime(buf,40,"%H:%M:%S ",local); \
  MutexLock mu(Thread::Current(),Runtime::Current()->fieldInstrumentationListener->logMutex);\
  l->log << buf << x << std::endl;}
 
