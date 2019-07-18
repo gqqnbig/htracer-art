@@ -177,6 +177,7 @@ art_debug_defaults {
         "-DVIXL_DEBUG",
         //-DNDEBUG is added in build/soong/cc/config/global.go.
         "-UNDEBUG",
+		"-fno-inline",
     ],
     asflags: [
         "-UNDEBUG",
