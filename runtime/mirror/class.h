@@ -1403,7 +1403,7 @@ class MANAGED Class FINAL : public Object {
   // Order governed by java field ordering. See art::ClassLinker::LinkFields.
 
   // Defining class loader, or null for the "bootstrap" system loader.
-  HeapReference<ClassLoader> class_loader_;
+  HeapReference<ClassLoader> class_loader_; //sizeof(HeapReference<ClassLoader>)=4
 
   // For array classes, the component class object for instanceof/checkcast
   // (for String[][][], this will be String[][]). null for non-array classes.
