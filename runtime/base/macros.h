@@ -94,4 +94,12 @@ template<typename T> ART_FRIEND_TEST(test_set_name, individual_test)
 #define LOCKABLE CAPABILITY("mutex")
 #define SHARED_LOCKABLE SHARED_CAPABILITY("mutex")
 
+
+template<int number>
+struct HelperPrintStaticValue {
+  operator char() { return number + 256; }
+};
+
+#define PRINT_STATIC_VALUE(valueExpression) char(HelperPrintStaticValue<valueExpression>());
+
 #endif  // ART_RUNTIME_BASE_MACROS_H_
