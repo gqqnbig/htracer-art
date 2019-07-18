@@ -728,8 +728,11 @@ class MANAGED LOCKABLE Object {
   //Thus even if I set readCount type to be uint8_t, the actual bytes is 10, but it
   //will be aligned to 12.
   //https://blog.csdn.net/hairetz/article/details/4084088
-  uint32_t readCount_ = 0; //size is 4.
-  uint32_t writeCount_ = 0;
+  uint16_t readCount_ = 0; //16 is 16 bits. Since 8 bits is 1 byte, the size of uint16_t is 2.
+  uint16_t writeCount_ = 0;
+  uint16_t isInNvm_ = 0;
+  uint16_t isInNvm_padding_2=0;
+
 
   friend class art::ImageWriter;
   friend class art::Monitor;
