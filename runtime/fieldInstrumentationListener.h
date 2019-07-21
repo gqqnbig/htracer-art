@@ -132,6 +132,11 @@ class FieldInstrumentationListener final : public instrumentation::Instrumentati
 
   void FieldWritten_(mirror::Object* this_object, ArtField* field, const JValue& field_value, const char* tag = "") REQUIRES_SHARED(Locks::mutator_lock_);
 
+  void SimulateNvmSlowness() {
+    asm("nop\n"
+        "nop");
+  }
+
   std::ofstream log;
 
   Mutex logMutex DEFAULT_MUTEX_ACQUIRED_AFTER;

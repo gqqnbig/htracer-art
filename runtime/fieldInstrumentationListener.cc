@@ -25,6 +25,9 @@ void FieldInstrumentationListener::FieldRead_(mirror::Object* this_object, ArtFi
       LOG(INFO) << "FieldInstrumentationListener read: object=" << this_object->IdentityHashCode()
                 << ", field=" << field->PrettyField(true)
                 << ", readCount=" << this_object->readCount_ << ", writeCount=" << this_object->writeCount_;
+
+    if (this_object->isInNvm_)
+      SimulateNvmSlowness();
   }
 }
 
