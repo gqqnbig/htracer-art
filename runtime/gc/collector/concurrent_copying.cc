@@ -2702,9 +2702,12 @@ void ConcurrentCopying::LogObjectCounts(mirror::Object* ref, const char* tag) {
     //DCHECK_NE(ref->GetLockWord(false).GetState(), LockWord::LockState::kForwardingAddress)
     //    << "If an object is ForwardingAddress, its read write count should be cleared to 0 in ConcurrentCopying::Copy.";
     int32_t hash = ref->IdentityHashCode();
+
+    int objectSize = ref->SizeOf();
+
     PROFILE_LOG(tag << " hash=" << hash
-                        << ",type=" << ref->PrettyTypeOf()
-                        << ",read=" << ref->readCount_ << ",write=" << ref->writeCount_);
+                    << ",type=" << ref->PrettyTypeOf()
+                    << ",read=" << ref->readCount_ << ",write=" << ref->writeCount_ << ",size=" << objectSize);
 
     //if (ref->readCount_ + ref->writeCount_ < 100)
     //  PROFILE_LOG("Object " << hash << " can be moved to NVM.");
